@@ -16,8 +16,15 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Tests for {@link Secp256k1PublicKey}
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 public class Secp256k1PublicKeyTests extends AbstractCryptoTests {
-    private static Logger LOGGER = LoggerFactory.getLogger(Secp256k1PublicKeyTests.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Secp256k1PublicKeyTests.class);
 
     @Test
     void readPublicKey_should_load_public_key() throws IOException, URISyntaxException {

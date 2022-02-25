@@ -14,6 +14,13 @@ import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
+/**
+ * secp256k1 implementation of {@link AbstractPublicKey}
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Secp256k1PublicKey extends AbstractPublicKey {
@@ -38,6 +45,7 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
             throw new IOException();
         }
     }
+
 
     @Override
     public void writePublicKey(String filename) throws IOException {
@@ -67,6 +75,12 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         return Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey.toByteArray()), getKey());
     }
 
+    /**
+     * Gets a short key
+     *
+     * @param key the key as a byte array
+     * @return short key as byte array
+     */
     public static byte[] getShortKey(byte[] key) {
         BigInteger pubKey = new BigInteger(key);
         String pubKeyPrefix = pubKey.testBit(0) ? "03" : "02";

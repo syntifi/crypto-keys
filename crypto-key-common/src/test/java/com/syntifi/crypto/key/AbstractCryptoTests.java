@@ -10,30 +10,34 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 
+/**
+ * Shared key testing functionality
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 public abstract class AbstractCryptoTests {
     /**
      * Loads test key file from resources
-     * 
-     * @param filename
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
+     *
+     * @param filename the file name
+     * @return a string with file path from resources
+     * @throws URISyntaxException thrown if it can't parse file url to URI for fetching the path
      */
     protected String getResourcesKeyPath(String filename) throws URISyntaxException {
-        URL url = getClass().getClassLoader().getResource(filename);
-
-        String path = Paths.get(url.toURI()).toString();
-
-        return path;
+        return Paths.get(Objects.requireNonNull(getClass().getClassLoader().getResource(filename)).toURI()).toString();
     }
 
     /**
-     * Compare files
-     * 
-     * @param file1
-     * @param file2
-     * @throws IOException
+     * Compare text files
+     *
+     * @param file1 a file object
+     * @param file2 another file object
+     * @return true if matches, false otherwise
+     * @throws IOException thrown if error reading files
      */
     protected boolean compareTextFiles(File file1, File file2) throws IOException {
         byte[] contentFile1 = Files.readAllBytes(file1.toPath());
@@ -43,15 +47,14 @@ public abstract class AbstractCryptoTests {
     }
 
     /**
-     * 
-     * @param file1
-     * @param file2
-     * @return
-     * @throws IOException
+     * @param file1 a file
+     * @param file2 another file
+     * @return true if matches, false otherwise
+     * @throws IOException thrown if error reading files
      */
     protected boolean compareFiles(File file1, File file2) throws IOException {
         try (RandomAccessFile randomAccessFile1 = new RandomAccessFile(file1, "r");
-                RandomAccessFile randomAccessFile2 = new RandomAccessFile(file2, "r")) {
+             RandomAccessFile randomAccessFile2 = new RandomAccessFile(file2, "r")) {
 
             FileChannel ch1 = randomAccessFile1.getChannel();
             FileChannel ch2 = randomAccessFile2.getChannel();

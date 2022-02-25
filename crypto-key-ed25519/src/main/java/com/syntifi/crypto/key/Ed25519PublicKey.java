@@ -11,6 +11,13 @@ import org.bouncycastle.util.encoders.Hex;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
+/**
+ * ed25519 implementation of {@link AbstractPublicKey}
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Ed25519PublicKey extends AbstractPublicKey {
@@ -52,7 +59,7 @@ public class Ed25519PublicKey extends AbstractPublicKey {
     }
 
     @Override
-    public Boolean verify(String message, String signature) throws GeneralSecurityException {
+    public Boolean verify(String message, String signature) {
         byte[] byteMessage = message.getBytes();
 
         // Verify
@@ -60,6 +67,6 @@ public class Ed25519PublicKey extends AbstractPublicKey {
         verifier.init(false, publicKeyParameters);
         verifier.update(byteMessage, 0, byteMessage.length);
 
-        return verifier.verifySignature(Hex.decode((String) signature));
+        return verifier.verifySignature(Hex.decode(signature));
     }
 }

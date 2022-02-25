@@ -4,6 +4,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 
+/**
+ * ASN1 identifiers for working with key cryptography
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ASN1Identifiers{
 

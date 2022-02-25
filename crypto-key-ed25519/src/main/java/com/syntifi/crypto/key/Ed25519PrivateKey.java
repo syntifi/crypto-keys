@@ -12,9 +12,16 @@ import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 
+/**
+ * ed25519 implementation of {@link AbstractPrivateKey}
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 @EqualsAndHashCode(callSuper = true)
 public class Ed25519PrivateKey extends AbstractPrivateKey {
-    
+
     private Ed25519PrivateKeyParameters privateKeyParameters;
 
     /*

@@ -17,8 +17,15 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for {@link Ed25519PrivateKey}
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.1.0
+ */
 public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
-    private static Logger LOGGER = LoggerFactory.getLogger(Ed25519PrivateKeyTests.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Ed25519PrivateKeyTests.class);
 
     @Test
     void readPrivateKey_should_load_private_key() throws IOException, URISyntaxException {
@@ -32,7 +39,7 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
 
         // Compare derived public key to generated hex without leading id byte
         Path hexKeyFilePath = Paths.get(getResourcesKeyPath("crypto/Ed25519/public_key_hex"));
-        String hexKey = Files.readString(hexKeyFilePath);
+        String hexKey = new String(Files.readAllBytes(hexKeyFilePath));
         LOGGER.debug("Derived public hex Key from {}: {}", hexKeyFilePath,
                 Hex.toHexString(privKey.derivePublicKey().getKey()));
 
