@@ -2,7 +2,7 @@
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/syntifi/crypto-keys?sort=semver)
 [![Project license](https://img.shields.io/badge/license-Apache%202-blue)](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
-# Syntifi Crypto Keys Java Library
+# Crypto Keys Java Library
 
 This project wraps public and private keys for common cryptographic functionalities.
 
@@ -22,7 +22,10 @@ This project wraps public and private keys for common cryptographic functionalit
 Using gradle
 
 ```gradle
-implementation com.syntifi.crypto:crypto-key-ed2551:VERSION
+// for using ed25519 key pair
+implementation com.syntifi.crypto:crypto-key-ed25519:VERSION
+
+// for using secp256k1 key pair
 implementation com.syntifi.crypto:crypto-key-secp256k1:VERSION
 ```
 
