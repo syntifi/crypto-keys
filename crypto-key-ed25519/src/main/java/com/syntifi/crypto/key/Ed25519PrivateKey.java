@@ -1,6 +1,7 @@
 package com.syntifi.crypto.key;
 
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.crypto.CryptoException;
@@ -19,10 +20,21 @@ import java.io.IOException;
  * @author Andre Bertolace
  * @since 0.1.0
  */
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Ed25519PrivateKey extends AbstractPrivateKey {
 
     private Ed25519PrivateKeyParameters privateKeyParameters;
+
+    public Ed25519PrivateKey(byte[] privateKey) {
+        super(privateKey);
+        loadPrivateKey(privateKey);
+    }
+
+    @Override
+    public void loadPrivateKey(byte[] privateKey) {
+        privateKeyParameters = new Ed25519PrivateKeyParameters(privateKey, 0);
+    }
 
     /*
      * SEQUENCE (3 elem) INTEGER 0 SEQUENCE (1 elem) OBJECT IDENTIFIER 1.3.101.112
@@ -54,15 +66,14 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
     }
 
     @Override
-    public String sign(String message) {
-        byte[] byteMessage = message.getBytes();
+    public byte[] sign(byte[] message) {
         Signer signer = new Ed25519Signer();
         signer.init(true, privateKeyParameters);
-        signer.update(byteMessage, 0, byteMessage.length);
+        signer.update(message, 0, message.length);
         byte[] signature;
         try {
             signature = signer.generateSignature();
-            return Hex.toHexString(signature);
+            return signature;
         } catch (DataLengthException | CryptoException e) {
             // TODO: throw new SomeException();
             return null;

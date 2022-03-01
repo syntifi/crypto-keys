@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,25 +29,25 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
 
     @Test
     void readPublicKey_should_load_and_be_equal_to_generated_public_key() throws IOException, URISyntaxException {
-        Ed25519PublicKey pubKey = loadPublicKey("ed25519/public_key.pem");
-        assertNotNull(pubKey.getKey());
+        Ed25519PublicKey publicKey = loadPublicKey("ed25519/public_key.pem");
+        assertNotNull(publicKey.getKey());
 
         // Compare to generated hex without leading id byte
         Path hexKeyFilePath = Paths.get(getResourcesKeyPath("ed25519/public_key_hex"));
         String hexKey = new String(Files.readAllBytes(hexKeyFilePath));
-        LOGGER.debug("Hex Key from {}: {}", hexKeyFilePath, Hex.toHexString(pubKey.getKey()));
-        assertEquals(hexKey.substring(2), Hex.toHexString(pubKey.getKey()));
+        LOGGER.debug("Hex Key from {}: {}", hexKeyFilePath, Hex.toHexString(publicKey.getKey()));
+        assertEquals(hexKey.substring(2), Hex.toHexString(publicKey.getKey()));
     }
 
     @Test
     void writePublicKey_should_equal_source_file() throws URISyntaxException, IOException {
-        Ed25519PublicKey pubKey = loadPublicKey("ed25519/public_key.pem");
+        Ed25519PublicKey publicKey = loadPublicKey("ed25519/public_key.pem");
 
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
         File publicKeyFile = File.createTempFile(df.format(new Date()), "-public-key-test.pem");
 
         LOGGER.debug("Writing public key to {}", publicKeyFile.getPath());
-        pubKey.writePublicKey(publicKeyFile.getPath());
+        publicKey.writePublicKey(publicKeyFile.getPath());
 
         assertTrue(compareTextFiles(new File(getResourcesKeyPath("ed25519/public_key.pem")),
                 publicKeyFile));
@@ -59,13 +58,13 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
         String message = "Test message";
         String hexSignature = "4555103678684364a98478112ce0c298ed841d806d2b67b09e8f0215cc738f3c5a1fca5beaf0474ff636613821bcb97e88b3b4d700e65c6cf7574489e09f170c";
 
-        Ed25519PublicKey pubKey = loadPublicKey("ed25519/public_key.pem");
+        Ed25519PublicKey publicKey = loadPublicKey("ed25519/public_key.pem");
 
-        String hexKey = Hex.toHexString(pubKey.getKey());
+        String hexKey = Hex.toHexString(publicKey.getKey());
 
         LOGGER.debug("Verifying Ed25519 signature of {} with key {}", message, hexKey);
 
-        Boolean verified = pubKey.verify(message, hexSignature);
+        Boolean verified = publicKey.verify(message.getBytes(), Hex.decode(hexSignature));
 
         LOGGER.debug("Signature verified: {}", verified);
 
@@ -80,9 +79,9 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
 
         LOGGER.debug("Verifying Ed25519 signature of {} with key {}", message, hexKey);
 
-        Ed25519PublicKey pubKey = new Ed25519PublicKey(Hex.decode(hexKey));
+        Ed25519PublicKey publicKey = new Ed25519PublicKey(Hex.decode(hexKey));
 
-        Boolean verified = pubKey.verify(message, hexSignature);
+        Boolean verified = publicKey.verify(message.getBytes(), Hex.decode(hexSignature));
 
         LOGGER.debug("Signature verified: {}", verified);
 
@@ -90,11 +89,11 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
     }
 
     private Ed25519PublicKey loadPublicKey(String publicKeyPath) throws URISyntaxException, IOException {
-        Ed25519PublicKey pubKey = new Ed25519PublicKey();
+        Ed25519PublicKey publicKey = new Ed25519PublicKey();
         String keyFilePath = getResourcesKeyPath(publicKeyPath);
         LOGGER.debug("Reading key from {}", keyFilePath);
-        pubKey.readPublicKey(keyFilePath);
-        LOGGER.debug("Key: {}", Hex.toHexString(pubKey.getKey()));
-        return pubKey;
+        publicKey.readPublicKey(keyFilePath);
+        LOGGER.debug("Key: {}", Hex.toHexString(publicKey.getKey()));
+        return publicKey;
     }
 }

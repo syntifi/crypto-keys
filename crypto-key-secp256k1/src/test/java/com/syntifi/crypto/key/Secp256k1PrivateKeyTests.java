@@ -72,11 +72,11 @@ public class Secp256k1PrivateKeyTests extends AbstractCryptoTests {
         LOGGER.info(privKey.getKeyPair().getPublicKey().toString(16));
         LOGGER.info(Hex.toHexString(privKey.getKey()));
 
-        String signature = privKey.sign("Test message");
+        byte[] signature = privKey.sign("Test message".getBytes());
 
-        LOGGER.info(signature);
+        LOGGER.info(Hex.toHexString(signature));
         assertEquals(
             "ea5b38fd0db5fb3d871c47fde1fa4c4db75d1a9e1c0ac54d826e178ee0e63707176b4e63b4f838bd031f007fffd6a4f71d920a10c48ea53dd1573fa2b58a829e",
-                signature);
+                Hex.toHexString(signature));
     }
 }

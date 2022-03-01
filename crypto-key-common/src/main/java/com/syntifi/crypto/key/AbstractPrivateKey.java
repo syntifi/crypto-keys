@@ -21,6 +21,13 @@ public abstract class AbstractPrivateKey {
     private byte[] key;
 
     /**
+     * Loads a private key from a byte array
+     *
+     * @param privateKey the private key bytes
+     */
+    public abstract void loadPrivateKey(byte[] privateKey) throws IOException;
+
+    /**
      * Reads the private key from a file
      *
      * @param filename the source filename
@@ -44,7 +51,7 @@ public abstract class AbstractPrivateKey {
      * @return signed message
      * @throws GeneralSecurityException thrown if an error occurs processing message or signature
      */
-    public abstract String sign(String message) throws GeneralSecurityException;
+    public abstract byte[] sign(byte[] message) throws GeneralSecurityException;
 
     /**
      * Derives the public key from the loaded private key

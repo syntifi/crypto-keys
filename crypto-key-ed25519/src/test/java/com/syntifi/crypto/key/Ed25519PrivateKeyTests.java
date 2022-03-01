@@ -29,32 +29,32 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
 
     @Test
     void readPrivateKey_should_load_private_key() throws IOException, URISyntaxException {
-        Ed25519PrivateKey privKey = loadPrivateKey("crypto/Ed25519/secret_key.pem");
-        assertNotNull(privKey.getKey());
+        Ed25519PrivateKey privateKey = readPrivateKey("crypto/Ed25519/secret_key.pem");
+        assertNotNull(privateKey.getKey());
     }
 
     @Test
     void readPrivateKey_derived_public_key_should_equal_generated() throws IOException, URISyntaxException {
-        Ed25519PrivateKey privKey = loadPrivateKey("crypto/Ed25519/secret_key.pem");
+        Ed25519PrivateKey privateKey = readPrivateKey("crypto/Ed25519/secret_key.pem");
 
         // Compare derived public key to generated hex without leading id byte
         Path hexKeyFilePath = Paths.get(getResourcesKeyPath("crypto/Ed25519/public_key_hex"));
         String hexKey = new String(Files.readAllBytes(hexKeyFilePath));
         LOGGER.debug("Derived public hex Key from {}: {}", hexKeyFilePath,
-                Hex.toHexString(privKey.derivePublicKey().getKey()));
+                Hex.toHexString(privateKey.derivePublicKey().getKey()));
 
-        assertEquals(hexKey.substring(2), Hex.toHexString(privKey.derivePublicKey().getKey()));
+        assertEquals(hexKey.substring(2), Hex.toHexString(privateKey.derivePublicKey().getKey()));
     }
 
     @Test
     void writePrivateKey_should_equal_source_file() throws URISyntaxException, IOException {
-        Ed25519PrivateKey privKey = loadPrivateKey("ed25519/secret_key.pem");
+        Ed25519PrivateKey privateKey = readPrivateKey("ed25519/secret_key.pem");
 
         DateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss");
         File privateKeyFile = File.createTempFile(df.format(new Date()), "-private-key-test.pem");
 
         LOGGER.debug("Writing private key to {}", privateKeyFile.getPath());
-        privKey.writePrivateKey(privateKeyFile.getPath());
+        privateKey.writePrivateKey(privateKeyFile.getPath());
 
         assertTrue(compareTextFiles(new File(getResourcesKeyPath("ed25519/secret_key.pem")),
                 privateKeyFile));
@@ -62,23 +62,23 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
 
     @Test
     void sign_should_sign_message() throws URISyntaxException, IOException {
-        Ed25519PrivateKey privKey = loadPrivateKey("ed25519/secret_key.pem");
+        Ed25519PrivateKey privateKey = readPrivateKey("ed25519/secret_key.pem");
 
-        String signature = privKey.sign("Test message");
+        byte[] signature = privateKey.sign("Test message".getBytes());
 
         assertEquals(
                 "4555103678684364a98478112ce0c298ed841d806d2b67b09e8f0215cc738f3c5a1fca5beaf0474ff636613821bcb97e88b3b4d700e65c6cf7574489e09f170c",
-                signature);
+                Hex.toHexString(signature));
 
         LOGGER.debug("Signed as {}", signature);
     }
 
-    private Ed25519PrivateKey loadPrivateKey(String privateKeyPath) throws URISyntaxException, IOException {
-        Ed25519PrivateKey privKey = new Ed25519PrivateKey();
+    private Ed25519PrivateKey readPrivateKey(String privateKeyPath) throws URISyntaxException, IOException {
+        Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
         String keyFilePath = getResourcesKeyPath(privateKeyPath);
         LOGGER.debug("Reading key from {}", keyFilePath);
-        privKey.readPrivateKey(keyFilePath);
-        LOGGER.debug("Key: {}", Hex.toHexString(privKey.getKey()));
-        return privKey;
+        privateKey.readPrivateKey(keyFilePath);
+        LOGGER.debug("Key: {}", Hex.toHexString(privateKey.getKey()));
+        return privateKey;
     }
 }
