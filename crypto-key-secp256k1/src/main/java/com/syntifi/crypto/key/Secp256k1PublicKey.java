@@ -30,13 +30,11 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
     }
 
     @Override
-    public void readPublicKey(String filename) throws IOException {
-        ASN1Primitive derKey = ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(filename));
+    public void loadPublicKey(byte[] publicKey) throws IOException {
+        ASN1Primitive derKey = ASN1Primitive.fromByteArray(publicKey);
         ASN1Sequence objBaseSeq = ASN1Sequence.getInstance(derKey);
-        String keyId = ASN1ObjectIdentifier
-                .getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(0)).getId();
-        String curveId = ASN1ObjectIdentifier
-                .getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(1)).getId();
+        String keyId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(0)).getId();
+        String curveId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(1)).getId();
         if (curveId.equals(ASN1Identifiers.Secp256k1OIDCurve.getId())
                 && keyId.equals(ASN1Identifiers.Secp256k1OIDkey.getId())) {
             DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
@@ -44,13 +42,17 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         } else {
             throw new IOException();
         }
+
     }
 
+    @Override
+    public void readPublicKey(String filename) throws IOException {
+        loadPublicKey(PemFileHelper.readPemFile(filename));
+    }
 
     @Override
     public void writePublicKey(String filename) throws IOException {
         try (FileWriter fileWriter = new FileWriter(filename)) {
-            //DERBitString key = new DERBitString(Secp256k1PublicKey.getShortKey(getKey()));
             DERBitString key = new DERBitString(getKey());
             ASN1EncodableVector v1 = new ASN1EncodableVector();
             v1.add(ASN1Identifiers.Secp256k1OIDkey);
@@ -65,13 +67,12 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
     }
 
     @Override
-    public Boolean verify(String message, String signature) throws GeneralSecurityException {
-        byte[] signatureBytes = Hex.decode(signature);
+    public Boolean verify(byte[] message, byte[] signature) throws GeneralSecurityException {
         SignatureData signatureData = new SignatureData(
                 (byte) 27,
-                Arrays.copyOfRange(signatureBytes, 0, 32),
-                Arrays.copyOfRange(signatureBytes, 32, 64));
-        BigInteger derivedKey = Sign.signedMessageHashToKey(Hash.sha256(message.getBytes()), signatureData);
+                Arrays.copyOfRange(signature, 0, 32),
+                Arrays.copyOfRange(signature, 32, 64));
+        BigInteger derivedKey = Sign.signedMessageHashToKey(Hash.sha256(message), signatureData);
         return Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey.toByteArray()), getKey());
     }
 

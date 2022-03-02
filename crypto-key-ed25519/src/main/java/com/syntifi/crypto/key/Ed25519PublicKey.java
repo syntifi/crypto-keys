@@ -9,7 +9,6 @@ import org.bouncycastle.crypto.signers.Ed25519Signer;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /**
  * ed25519 implementation of {@link AbstractPublicKey}
@@ -24,9 +23,14 @@ public class Ed25519PublicKey extends AbstractPublicKey {
 
     private Ed25519PublicKeyParameters publicKeyParameters;
 
-    public Ed25519PublicKey(byte[] bytes) {
-        super(bytes);
-        publicKeyParameters = new Ed25519PublicKeyParameters(bytes, 0);
+    public Ed25519PublicKey(byte[] publicKey) {
+        super(publicKey);
+        loadPublicKey(publicKey);
+    }
+
+    @Override
+    public void loadPublicKey(byte[] publicKey) {
+        publicKeyParameters = new Ed25519PublicKeyParameters(publicKey, 0);
     }
 
     /*
@@ -59,14 +63,11 @@ public class Ed25519PublicKey extends AbstractPublicKey {
     }
 
     @Override
-    public Boolean verify(String message, String signature) {
-        byte[] byteMessage = message.getBytes();
-
-        // Verify
+    public Boolean verify(byte[] message, byte[] signature) {
         Signer verifier = new Ed25519Signer();
         verifier.init(false, publicKeyParameters);
-        verifier.update(byteMessage, 0, byteMessage.length);
+        verifier.update(message, 0, message.length);
 
-        return verifier.verifySignature(Hex.decode(signature));
+        return verifier.verifySignature(signature);
     }
 }

@@ -58,6 +58,6 @@ public class Secp256k1PublicKeyTests extends AbstractCryptoTests {
         pubKey.readPublicKey(filePath);
         LOGGER.info(Hex.toHexString(pubKey.getKey()));
 
-        assertTrue(pubKey.verify("Test message", hexSignature));
+        assertTrue(pubKey.verify("Test message".getBytes(), Hex.decode(hexSignature)));
     }
 }

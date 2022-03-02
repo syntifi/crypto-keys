@@ -21,6 +21,13 @@ public abstract class AbstractPublicKey {
     private byte[] key;
 
     /**
+     * Loads a public key from a byte array
+     *
+     * @param publicKey the public key bytes
+     */
+    public abstract void loadPublicKey(byte[] publicKey) throws IOException;
+
+    /**
      * Reads the public key from a file
      *
      * @param filename the source filename
@@ -44,5 +51,5 @@ public abstract class AbstractPublicKey {
      * @return true if matches, false otherwise
      * @throws GeneralSecurityException thrown if an error occurs processing message and signature
      */
-    public abstract Boolean verify(String message, String signature) throws GeneralSecurityException;
+    public abstract Boolean verify(byte[] message, byte[] signature) throws GeneralSecurityException;
 }

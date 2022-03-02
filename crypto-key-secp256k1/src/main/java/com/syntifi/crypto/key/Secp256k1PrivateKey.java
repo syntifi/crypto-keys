@@ -1,6 +1,8 @@
 package com.syntifi.crypto.key;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.crypto.ECKeyPair;
@@ -11,6 +13,7 @@ import org.web3j.crypto.Sign.SignatureData;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -20,19 +23,31 @@ import java.util.Arrays;
  * @author Andre Bertolace
  * @since 0.1.0
  */
-@Getter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Secp256k1PrivateKey extends AbstractPrivateKey {
+    @Getter
     private ECKeyPair keyPair;
 
+    public Secp256k1PrivateKey(byte[] privateKey) throws IOException {
+        super(privateKey);
+        loadPrivateKey(privateKey);
+    }
+
     @Override
-    public void readPrivateKey(String filename) throws IOException {
-        ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(filename));
+    public void loadPrivateKey(byte[] privateKey) throws IOException {
+        ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(privateKey);
         String algoId = key.getObjectAt(2).toString();
         if (algoId.equals("[0]" + ASN1Identifiers.Secp256k1OIDCurve) && key.getObjectAt(0).toString().equals("1")) {
             DEROctetString pk = (DEROctetString) key.getObjectAt(1);
             keyPair = ECKeyPair.create(pk.getOctets());
             this.setKey(keyPair.getPrivateKey().toByteArray());
         }
+    }
+
+    @Override
+    public void readPrivateKey(String filename) throws IOException {
+        loadPrivateKey(PemFileHelper.readPemFile(filename));
     }
 
     @Override
@@ -67,9 +82,14 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
      * ", of minimal length.
      */
     @Override
-    public String sign(String message) {
-        SignatureData signature = Sign.signMessage(Hash.sha256(message.getBytes()), keyPair, false);
-        return Hex.toHexString(signature.getR()) + Hex.toHexString(signature.getS());
+    public byte[] sign(byte[] message) {
+        SignatureData signature = Sign.signMessage(Hash.sha256(message), keyPair, false);
+        // TODO: Check this conversion
+        //return Hex.toHexString(signature.getR()) + Hex.toHexString(signature.getS());
+        ByteBuffer bb = ByteBuffer.allocate(signature.getR().length + signature.getS().length);
+        bb.put(signature.getR());
+        bb.put(signature.getS());
+        return bb.array();
     }
 
     /*
