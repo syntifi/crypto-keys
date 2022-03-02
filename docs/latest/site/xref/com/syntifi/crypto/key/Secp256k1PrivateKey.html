@@ -8,111 +8,91 @@
 <div id="overview"><a href="../../../../../apidocs/com/syntifi/crypto/key/Secp256k1PrivateKey.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.syntifi.crypto.key;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> lombok.Getter;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> lombok.NoArgsConstructor;
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.asn1.*;
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.util.encoders.Hex;
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.ECKeyPair;
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Hash;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.web3j.crypto.Sign;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.web3j.crypto.Sign.SignatureData;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> java.io.FileWriter;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> java.math.BigInteger;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> java.nio.ByteBuffer;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * secp256k1 implementation of {@link AbstractPrivateKey}</em>
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> *</em>
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * @author Alexandre Carvalho</em>
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * @author Andre Bertolace</em>
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * @since 0.1.0</em>
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  @NoArgsConstructor
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  @EqualsAndHashCode(callSuper = <strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Secp256k1PrivateKey" href="../../../../com/syntifi/crypto/key/Secp256k1PrivateKey.html#Secp256k1PrivateKey">Secp256k1PrivateKey</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractPrivateKey" href="../../../../com/syntifi/crypto/key/AbstractPrivateKey.html#AbstractPrivateKey">AbstractPrivateKey</a> {
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      @Getter
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> ECKeyPair keyPair;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">public</strong> <a name="Secp256k1PrivateKey" href="../../../../com/syntifi/crypto/key/Secp256k1PrivateKey.html#Secp256k1PrivateKey">Secp256k1PrivateKey</a>(byte[] privateKey) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          <strong class="jxr_keyword">super</strong>(privateKey);
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>          loadPrivateKey(privateKey);
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>      }
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>      @Override
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> loadPrivateKey(byte[] privateKey) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>          ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(privateKey);
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>          String algoId = key.getObjectAt(2).toString();
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>          <strong class="jxr_keyword">if</strong> (algoId.equals(<span class="jxr_string">"[0]"</span> + ASN1Identifiers.Secp256k1OIDCurve) &amp;&amp; key.getObjectAt(0).toString().equals(<span class="jxr_string">"1"</span>)) {
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>              DEROctetString pk = (DEROctetString) key.getObjectAt(1);
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>              keyPair = ECKeyPair.create(pk.getOctets());
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>              <strong class="jxr_keyword">this</strong>.setKey(keyPair.getPrivateKey().toByteArray());
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          }
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      }
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @Override
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> readPrivateKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>          loadPrivateKey(PemFileHelper.readPemFile(filename));
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      }
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      @Override
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> writePrivateKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>          <strong class="jxr_keyword">try</strong> (FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(filename)) {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>              DERTaggedObject derPrefix = <strong class="jxr_keyword">new</strong> DERTaggedObject(0, ASN1Identifiers.Secp256k1OIDCurve);
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>              DEROctetString key = <strong class="jxr_keyword">new</strong> DEROctetString(getKey());
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>              ASN1EncodableVector vector = <strong class="jxr_keyword">new</strong> ASN1EncodableVector();
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>              vector.add(<strong class="jxr_keyword">new</strong> ASN1Integer(1));
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>              vector.add(key);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>              vector.add(derPrefix);
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>              DERSequence derKey = <strong class="jxr_keyword">new</strong> DERSequence(vector);
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>              PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.EC_PRIVATE_KEY_DER_HEADER);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          }
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_comment">     * When encoded in DER, this becomes the following sequence of bytes:</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_comment">     * 0x30 b1 0x02 b2 (vr) 0x02 b3 (vs)</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_comment">     * where:</em>
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_comment">     * b1 is a single byte value, equal to the length, in bytes, of the remaining</em>
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_comment">     * list of bytes (from the first 0x02 to the end of the encoding);</em>
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_comment">     * b2 is a single byte value, equal to the length, in bytes, of (vr);</em>
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_comment">     * b3 is a single byte value, equal to the length, in bytes, of (vs);</em>
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_comment">     * (vr) is the signed big-endian encoding of the value "r</em>
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_comment">     * ", of minimal length;</em>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_comment">     * (vs) is the signed big-endian encoding of the value "s</em>
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_comment">     * ", of minimal length.</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_comment">     */</em>
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>      @Override
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">public</strong> byte[] sign(byte[] message) {
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          SignatureData signature = Sign.signMessage(Hash.sha256(message), keyPair, false);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          <em class="jxr_comment">// TODO: Check this conversion</em>
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          <em class="jxr_comment">//return Hex.toHexString(signature.getR()) + Hex.toHexString(signature.getS());</em>
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          ByteBuffer bb = ByteBuffer.allocate(signature.getR().length + signature.getS().length);
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>          bb.put(signature.getR());
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          bb.put(signature.getS());
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>          <strong class="jxr_keyword">return</strong> bb.array();
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>      }
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>  
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>      <em class="jxr_comment">/*</em>
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_comment">     * Returns a Secp256k1PublicKey object in a compressed format</em>
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_comment">     * adding the prefix 02/03 to identify the positive or negative Y followed</em>
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_comment">     * by the X value in the elliptic curve</em>
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_comment">     */</em>
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>     @Override
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     <strong class="jxr_keyword">public</strong> <a name="AbstractPublicKey" href="../../../../com/syntifi/crypto/key/AbstractPublicKey.html#AbstractPublicKey">AbstractPublicKey</a> derivePublicKey() {
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>         BigInteger pubKey = keyPair.getPublicKey();
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>         String pubKeyPrefix = pubKey.testBit(0) ? <span class="jxr_string">"03"</span> : <span class="jxr_string">"02"</span>;
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>         byte[] pubKeyBytes = Arrays.copyOf(pubKey.toByteArray(), 32);
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="Secp256k1PublicKey" href="../../../../com/syntifi/crypto/key/Secp256k1PublicKey.html#Secp256k1PublicKey">Secp256k1PublicKey</a>(Hex.decode(pubKeyPrefix + Hex.toHexString(pubKeyBytes)));
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     }
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> }
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> lombok.Getter;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.asn1.*;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.util.encoders.Hex;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.ECKeyPair;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Hash;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Sign;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Sign.SignatureData;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.io.FileWriter;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> java.math.BigInteger;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * secp256k1 implementation of {@link AbstractPrivateKey}</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * @author Alexandre Carvalho</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * @author Andre Bertolace</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * @since 0.1.0</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  @Getter
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Secp256k1PrivateKey" href="../../../../com/syntifi/crypto/key/Secp256k1PrivateKey.html#Secp256k1PrivateKey">Secp256k1PrivateKey</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractPrivateKey" href="../../../../com/syntifi/crypto/key/AbstractPrivateKey.html#AbstractPrivateKey">AbstractPrivateKey</a> {
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      <strong class="jxr_keyword">private</strong> ECKeyPair keyPair;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      @Override
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> readPrivateKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>          ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(filename));
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>          String algoId = key.getObjectAt(2).toString();
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>          <strong class="jxr_keyword">if</strong> (algoId.equals(<span class="jxr_string">"[0]"</span> + ASN1Identifiers.Secp256k1OIDCurve) &amp;&amp; key.getObjectAt(0).toString().equals(<span class="jxr_string">"1"</span>)) {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>              DEROctetString pk = (DEROctetString) key.getObjectAt(1);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>              keyPair = ECKeyPair.create(pk.getOctets());
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>              <strong class="jxr_keyword">this</strong>.setKey(keyPair.getPrivateKey().toByteArray());
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          }
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      }
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      @Override
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> writePrivateKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          <strong class="jxr_keyword">try</strong> (FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(filename)) {
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>              DERTaggedObject derPrefix = <strong class="jxr_keyword">new</strong> DERTaggedObject(0, ASN1Identifiers.Secp256k1OIDCurve);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>              DEROctetString key = <strong class="jxr_keyword">new</strong> DEROctetString(getKey());
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>              ASN1EncodableVector vector = <strong class="jxr_keyword">new</strong> ASN1EncodableVector();
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>              vector.add(<strong class="jxr_keyword">new</strong> ASN1Integer(1));
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>              vector.add(key);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>              vector.add(derPrefix);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>              DERSequence derKey = <strong class="jxr_keyword">new</strong> DERSequence(vector);
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>              PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.EC_PRIVATE_KEY_DER_HEADER);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          }
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      }
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_comment">     * When encoded in DER, this becomes the following sequence of bytes:</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_comment">     * 0x30 b1 0x02 b2 (vr) 0x02 b3 (vs)</em>
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_comment">     * where:</em>
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_comment">     * b1 is a single byte value, equal to the length, in bytes, of the remaining</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_comment">     * list of bytes (from the first 0x02 to the end of the encoding);</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_comment">     * b2 is a single byte value, equal to the length, in bytes, of (vr);</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_comment">     * b3 is a single byte value, equal to the length, in bytes, of (vs);</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_comment">     * (vr) is the signed big-endian encoding of the value "r</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_comment">     * &lt;p&gt;</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_comment">     * ", of minimal length;</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_comment">     * (vs) is the signed big-endian encoding of the value "s</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_comment">     * ", of minimal length.</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_comment">     */</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      @Override
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> String sign(String message) {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>          SignatureData signature = Sign.signMessage(Hash.sha256(message.getBytes()), keyPair, false);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <strong class="jxr_keyword">return</strong> Hex.toHexString(signature.getR()) + Hex.toHexString(signature.getS());
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>      <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_comment">     * Returns a Secp256k1PublicKey object in a compressed format</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_comment">     * adding the prefix 02/03 to identify the positive or negative Y followed</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  <em class="jxr_comment">     * by the X value in the elliptic curve</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_comment">     */</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      @Override
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">public</strong> <a name="AbstractPublicKey" href="../../../../com/syntifi/crypto/key/AbstractPublicKey.html#AbstractPublicKey">AbstractPublicKey</a> derivePublicKey() {
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>          BigInteger pubKey = keyPair.getPublicKey();
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>          String pubKeyPrefix = pubKey.testBit(0) ? <span class="jxr_string">"03"</span> : <span class="jxr_string">"02"</span>;
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          byte[] pubKeyBytes = Arrays.copyOf(pubKey.toByteArray(), 32);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="Secp256k1PublicKey" href="../../../../com/syntifi/crypto/key/Secp256k1PublicKey.html#Secp256k1PublicKey">Secp256k1PublicKey</a>(Hex.decode(pubKeyPrefix + Hex.toHexString(pubKeyBytes)));
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>      }
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>

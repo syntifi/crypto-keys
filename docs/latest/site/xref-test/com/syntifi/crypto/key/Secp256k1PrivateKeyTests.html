@@ -80,12 +80,12 @@
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>          LOGGER.info(privKey.getKeyPair().getPublicKey().toString(16));
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          LOGGER.info(Hex.toHexString(privKey.getKey()));
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>  
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          byte[] signature = privKey.sign(<span class="jxr_string">"Test message"</span>.getBytes());
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          String signature = privKey.sign(<span class="jxr_string">"Test message"</span>);
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>          LOGGER.info(Hex.toHexString(signature));
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          LOGGER.info(signature);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>          assertEquals(
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>              <span class="jxr_string">"ea5b38fd0db5fb3d871c47fde1fa4c4db75d1a9e1c0ac54d826e178ee0e63707176b4e63b4f838bd031f007fffd6a4f71d920a10c48ea53dd1573fa2b58a829e"</span>,
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  Hex.toHexString(signature));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  signature);
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      }
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  }
 </pre>

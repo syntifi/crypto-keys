@@ -38,65 +38,64 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      }
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      @Override
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> loadPublicKey(byte[] publicKey) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>          ASN1Primitive derKey = ASN1Primitive.fromByteArray(publicKey);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> readPublicKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>          ASN1Primitive derKey = ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(filename));
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>          ASN1Sequence objBaseSeq = ASN1Sequence.getInstance(derKey);
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>          String keyId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(0)).getId();
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>          String curveId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(1)).getId();
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>          <strong class="jxr_keyword">if</strong> (curveId.equals(ASN1Identifiers.Secp256k1OIDCurve.getId())
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>                  &amp;&amp; keyId.equals(ASN1Identifiers.Secp256k1OIDkey.getId())) {
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>              DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>              setKey(key.getBytes());
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException();
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>          }
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      }
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      @Override
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> readPublicKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>          loadPublicKey(PemFileHelper.readPemFile(filename));
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      }
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      @Override
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> writePublicKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>          <strong class="jxr_keyword">try</strong> (FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(filename)) {
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>              DERBitString key = <strong class="jxr_keyword">new</strong> DERBitString(getKey());
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>              ASN1EncodableVector v1 = <strong class="jxr_keyword">new</strong> ASN1EncodableVector();
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>              v1.add(ASN1Identifiers.Secp256k1OIDkey);
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>              v1.add(ASN1Identifiers.Secp256k1OIDCurve);
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>              DERSequence derPrefix = <strong class="jxr_keyword">new</strong> DERSequence(v1);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>              ASN1EncodableVector v2 = <strong class="jxr_keyword">new</strong> ASN1EncodableVector();
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>              v2.add(derPrefix);
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>              v2.add(key);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>              DERSequence derKey = <strong class="jxr_keyword">new</strong> DERSequence(v2);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>              PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.PUBLIC_KEY_DER_HEADER);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      }
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>      @Override
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      <strong class="jxr_keyword">public</strong> Boolean verify(byte[] message, byte[] signature) <strong class="jxr_keyword">throws</strong> GeneralSecurityException {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>          SignatureData signatureData = <strong class="jxr_keyword">new</strong> SignatureData(
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  (byte) 27,
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  Arrays.copyOfRange(signature, 0, 32),
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>                  Arrays.copyOfRange(signature, 32, 64));
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>          BigInteger derivedKey = Sign.signedMessageHashToKey(Hash.sha256(message), signatureData);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>          <strong class="jxr_keyword">return</strong> Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey.toByteArray()), getKey());
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>      }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     * Gets a short key</em>
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     * @param key the key as a byte array</em>
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">     * @return short key as byte array</em>
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> byte[] getShortKey(byte[] key) {
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          BigInteger pubKey = <strong class="jxr_keyword">new</strong> BigInteger(key);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          String pubKeyPrefix = pubKey.testBit(0) ? <span class="jxr_string">"03"</span> : <span class="jxr_string">"02"</span>;
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>          byte[] pubKeyBytes = Arrays.copyOf(key, 32);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">return</strong> Hex.decode(pubKeyPrefix + Hex.toHexString(pubKeyBytes));
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>  }
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>          String keyId = ASN1ObjectIdentifier
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>                  .getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(0)).getId();
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          String curveId = ASN1ObjectIdentifier
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>                  .getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(1)).getId();
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          <strong class="jxr_keyword">if</strong> (curveId.equals(ASN1Identifiers.Secp256k1OIDCurve.getId())
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>                  &amp;&amp; keyId.equals(ASN1Identifiers.Secp256k1OIDkey.getId())) {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>              DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>              setKey(key.getBytes());
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IOException();
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      }
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      @Override
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> writePublicKey(String filename) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>          <strong class="jxr_keyword">try</strong> (FileWriter fileWriter = <strong class="jxr_keyword">new</strong> FileWriter(filename)) {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>              <em class="jxr_comment">//DERBitString key = new DERBitString(Secp256k1PublicKey.getShortKey(getKey()));</em>
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>              DERBitString key = <strong class="jxr_keyword">new</strong> DERBitString(getKey());
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>              ASN1EncodableVector v1 = <strong class="jxr_keyword">new</strong> ASN1EncodableVector();
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>              v1.add(ASN1Identifiers.Secp256k1OIDkey);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>              v1.add(ASN1Identifiers.Secp256k1OIDCurve);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>              DERSequence derPrefix = <strong class="jxr_keyword">new</strong> DERSequence(v1);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>              ASN1EncodableVector v2 = <strong class="jxr_keyword">new</strong> ASN1EncodableVector();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>              v2.add(derPrefix);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>              v2.add(key);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>              DERSequence derKey = <strong class="jxr_keyword">new</strong> DERSequence(v2);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>              PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.PUBLIC_KEY_DER_HEADER);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          }
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>      @Override
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">public</strong> Boolean verify(String message, String signature) <strong class="jxr_keyword">throws</strong> GeneralSecurityException {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          byte[] signatureBytes = Hex.decode(signature);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          SignatureData signatureData = <strong class="jxr_keyword">new</strong> SignatureData(
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>                  (byte) 27,
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>                  Arrays.copyOfRange(signatureBytes, 0, 32),
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>                  Arrays.copyOfRange(signatureBytes, 32, 64));
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          BigInteger derivedKey = Sign.signedMessageHashToKey(Hash.sha256(message.getBytes()), signatureData);
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          <strong class="jxr_keyword">return</strong> Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey.toByteArray()), getKey());
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>      }
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  <em class="jxr_javadoccomment">     * Gets a short key</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * @param key the key as a byte array</em>
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     * @return short key as byte array</em>
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> byte[] getShortKey(byte[] key) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          BigInteger pubKey = <strong class="jxr_keyword">new</strong> BigInteger(key);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          String pubKeyPrefix = pubKey.testBit(0) ? <span class="jxr_string">"03"</span> : <span class="jxr_string">"02"</span>;
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          byte[] pubKeyBytes = Arrays.copyOf(key, 32);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          <strong class="jxr_keyword">return</strong> Hex.decode(pubKeyPrefix + Hex.toHexString(pubKeyBytes));
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>      }
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>
