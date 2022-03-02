@@ -66,7 +66,7 @@
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>          pubKey.readPublicKey(filePath);
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>          LOGGER.info(Hex.toHexString(pubKey.getKey()));
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>  
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>          assertTrue(pubKey.verify(<span class="jxr_string">"Test message"</span>, hexSignature));
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          assertTrue(pubKey.verify(<span class="jxr_string">"Test message"</span>.getBytes(), Hex.decode(hexSignature)));
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      }
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>  }
 </pre>

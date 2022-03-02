@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.syntifi.crypto.key"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.syntifi.crypto.key"},{"l":"com.syntifi.crypto.key.encdec"}]
