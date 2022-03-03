@@ -1,2 +1,3 @@
 com.syntifi.crypto.key
 com.syntifi.crypto.key.encdec
+com.syntifi.crypto.key.hash
