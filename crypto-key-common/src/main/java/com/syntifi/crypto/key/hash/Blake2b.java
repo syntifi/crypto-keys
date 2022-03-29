@@ -11,8 +11,15 @@ import org.bouncycastle.crypto.digests.Blake2bDigest;
  * @since 0.2.0
  */
 public class Blake2b {
-    public static byte[] digest(byte[] input) {
-        Blake2bDigest d = new Blake2bDigest();
+    /**
+     * returns a Blake2b Hash of size length in bytes
+     *
+     * @param input byte array to hash
+     * @param length desired output length in bytes
+     * @return a byte array of size 'length' bytes
+     */
+    public static byte[] digest(byte[] input, int length) {
+        Blake2bDigest d = new Blake2bDigest(length * 8);
         d.update(input, 0, input.length);
         byte[] result = new byte[d.getDigestSize()];
         d.doFinal(result, 0);
