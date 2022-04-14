@@ -8,10 +8,10 @@
 <div id="overview"><a href="../../../../../apidocs/com/syntifi/crypto/key/Secp256k1PublicKey.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.syntifi.crypto.key;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> lombok.NoArgsConstructor;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.asn1.*;
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.util.encoders.Hex;
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.encdec.Hex;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> lombok.EqualsAndHashCode;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> lombok.NoArgsConstructor;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.asn1.*;
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Hash;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Sign;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.web3j.crypto.Sign.SignatureData;
@@ -94,7 +94,7 @@
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          BigInteger pubKey = <strong class="jxr_keyword">new</strong> BigInteger(key);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>          String pubKeyPrefix = pubKey.testBit(0) ? <span class="jxr_string">"03"</span> : <span class="jxr_string">"02"</span>;
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>          byte[] pubKeyBytes = Arrays.copyOf(key, 32);
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">return</strong> Hex.decode(pubKeyPrefix + Hex.toHexString(pubKeyBytes));
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">return</strong> Hex.decode(pubKeyPrefix + Hex.encode(pubKeyBytes));
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      }
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>  }
 </pre>
