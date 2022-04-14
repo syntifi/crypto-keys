@@ -6,7 +6,6 @@ import org.bouncycastle.asn1.*;
 import org.bouncycastle.crypto.Signer;
 import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 import org.bouncycastle.crypto.signers.Ed25519Signer;
-import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 

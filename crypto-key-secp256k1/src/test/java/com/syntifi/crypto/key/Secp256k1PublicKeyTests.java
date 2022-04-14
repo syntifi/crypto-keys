@@ -1,6 +1,6 @@
 package com.syntifi.crypto.key;
 
-import org.bouncycastle.util.encoders.Hex;
+import com.syntifi.crypto.key.encdec.Hex;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ public class Secp256k1PublicKeyTests extends AbstractCryptoTests {
         Secp256k1PublicKey pubKey = new Secp256k1PublicKey();
         String filePath = getResourcesKeyPath("secp256k1/public_key.pem");
         pubKey.readPublicKey(filePath);
-        LOGGER.info(Hex.toHexString(pubKey.getKey()));
+        LOGGER.info(Hex.encode(pubKey.getKey()));
 
         assertTrue(pubKey.verify("Test message".getBytes(), Hex.decode(hexSignature)));
     }

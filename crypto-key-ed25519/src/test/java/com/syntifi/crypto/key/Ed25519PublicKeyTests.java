@@ -1,6 +1,6 @@
 package com.syntifi.crypto.key;
 
-import org.bouncycastle.util.encoders.Hex;
+import com.syntifi.crypto.key.encdec.Hex;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +35,8 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
         // Compare to generated hex without leading id byte
         Path hexKeyFilePath = Paths.get(getResourcesKeyPath("ed25519/public_key_hex"));
         String hexKey = new String(Files.readAllBytes(hexKeyFilePath));
-        LOGGER.debug("Hex Key from {}: {}", hexKeyFilePath, Hex.toHexString(publicKey.getKey()));
-        assertEquals(hexKey.substring(2), Hex.toHexString(publicKey.getKey()));
+        LOGGER.debug("Hex Key from {}: {}", hexKeyFilePath, Hex.encode(publicKey.getKey()));
+        assertEquals(hexKey.substring(2), Hex.encode(publicKey.getKey()));
     }
 
     @Test
@@ -60,26 +60,9 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
 
         Ed25519PublicKey publicKey = loadPublicKey("ed25519/public_key.pem");
 
-        String hexKey = Hex.toHexString(publicKey.getKey());
+        String hexKey = Hex.encode(publicKey.getKey());
 
         LOGGER.debug("Verifying Ed25519 signature of {} with key {}", message, hexKey);
-
-        Boolean verified = publicKey.verify(message.getBytes(), Hex.decode(hexSignature));
-
-        LOGGER.debug("Signature verified: {}", verified);
-
-        assertTrue(verified);
-    }
-
-    @Test
-    void verify_should_work_with_unicode_string() {
-        String message = "بو يوسف يعقوب بن إسحاق الصبّاح الكندي";
-        String hexKey = "cd62f1c5cca51fa3c25f4c76a46dd5f6b0988c95da6ea835ec4441d68dcea393";
-        String hexSignature = "c507aa390d6779d949d38258d6e1c8509664c16e645bdda9e70365ae06b23944b041aee323ea3783c923d90c73efa9c59d7b1ed87a5a1332a245874bd944fb07";
-
-        LOGGER.debug("Verifying Ed25519 signature of {} with key {}", message, hexKey);
-
-        Ed25519PublicKey publicKey = new Ed25519PublicKey(Hex.decode(hexKey));
 
         Boolean verified = publicKey.verify(message.getBytes(), Hex.decode(hexSignature));
 
@@ -93,7 +76,7 @@ public class Ed25519PublicKeyTests extends AbstractCryptoTests {
         String keyFilePath = getResourcesKeyPath(publicKeyPath);
         LOGGER.debug("Reading key from {}", keyFilePath);
         publicKey.readPublicKey(keyFilePath);
-        LOGGER.debug("Key: {}", Hex.toHexString(publicKey.getKey()));
+        LOGGER.debug("Key: {}", Hex.encode(publicKey.getKey()));
         return publicKey;
     }
 }

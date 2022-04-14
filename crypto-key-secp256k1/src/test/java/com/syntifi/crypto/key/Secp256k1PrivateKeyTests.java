@@ -1,6 +1,6 @@
 package com.syntifi.crypto.key;
 
-import org.bouncycastle.util.encoders.Hex;
+import com.syntifi.crypto.key.encdec.Hex;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +59,7 @@ public class Secp256k1PrivateKeyTests extends AbstractCryptoTests {
         pubKey.writePublicKey(derivedPublicKeyFile.getPath());
         LOGGER.info(privKey.getKeyPair().getPrivateKey().toString(16));
         LOGGER.info(privKey.getKeyPair().getPublicKey().toString(16));
-        LOGGER.info(Hex.toHexString(pubKey.getKey()));
+        LOGGER.info(Hex.encode(pubKey.getKey()));
         assertTrue(compareTextFiles(new File(getResourcesKeyPath("secp256k1/public_key.pem")),
                 derivedPublicKeyFile));
     }
@@ -70,13 +70,13 @@ public class Secp256k1PrivateKeyTests extends AbstractCryptoTests {
         String filePath = getResourcesKeyPath("secp256k1/secret_key.pem");
         privKey.readPrivateKey(filePath);
         LOGGER.info(privKey.getKeyPair().getPublicKey().toString(16));
-        LOGGER.info(Hex.toHexString(privKey.getKey()));
+        LOGGER.info(Hex.encode(privKey.getKey()));
 
         byte[] signature = privKey.sign("Test message".getBytes());
 
-        LOGGER.info(Hex.toHexString(signature));
+        LOGGER.info(Hex.encode(signature));
         assertEquals(
             "ea5b38fd0db5fb3d871c47fde1fa4c4db75d1a9e1c0ac54d826e178ee0e63707176b4e63b4f838bd031f007fffd6a4f71d920a10c48ea53dd1573fa2b58a829e",
-                Hex.toHexString(signature));
+                Hex.encode(signature));
     }
 }
