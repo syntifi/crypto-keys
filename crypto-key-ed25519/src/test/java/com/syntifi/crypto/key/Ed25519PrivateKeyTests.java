@@ -1,6 +1,6 @@
 package com.syntifi.crypto.key;
 
-import org.bouncycastle.util.encoders.Hex;
+import com.syntifi.crypto.key.encdec.Hex;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,21 +29,21 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
 
     @Test
     void readPrivateKey_should_load_private_key() throws IOException, URISyntaxException {
-        Ed25519PrivateKey privateKey = readPrivateKey("crypto/Ed25519/secret_key.pem");
+        Ed25519PrivateKey privateKey = readPrivateKey("ed25519/secret_key.pem");
         assertNotNull(privateKey.getKey());
     }
 
     @Test
     void readPrivateKey_derived_public_key_should_equal_generated() throws IOException, URISyntaxException {
-        Ed25519PrivateKey privateKey = readPrivateKey("crypto/Ed25519/secret_key.pem");
+        Ed25519PrivateKey privateKey = readPrivateKey("ed25519/secret_key.pem");
 
         // Compare derived public key to generated hex without leading id byte
-        Path hexKeyFilePath = Paths.get(getResourcesKeyPath("crypto/Ed25519/public_key_hex"));
+        Path hexKeyFilePath = Paths.get(getResourcesKeyPath("ed25519/public_key_hex"));
         String hexKey = new String(Files.readAllBytes(hexKeyFilePath));
         LOGGER.debug("Derived public hex Key from {}: {}", hexKeyFilePath,
-                Hex.toHexString(privateKey.derivePublicKey().getKey()));
+                Hex.encode(privateKey.derivePublicKey().getKey()));
 
-        assertEquals(hexKey.substring(2), Hex.toHexString(privateKey.derivePublicKey().getKey()));
+        assertEquals(hexKey.substring(2), Hex.encode(privateKey.derivePublicKey().getKey()));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
 
         assertEquals(
                 "4555103678684364a98478112ce0c298ed841d806d2b67b09e8f0215cc738f3c5a1fca5beaf0474ff636613821bcb97e88b3b4d700e65c6cf7574489e09f170c",
-                Hex.toHexString(signature));
+                Hex.encode(signature));
 
         LOGGER.debug("Signed as {}", signature);
     }
@@ -78,7 +78,7 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
         String keyFilePath = getResourcesKeyPath(privateKeyPath);
         LOGGER.debug("Reading key from {}", keyFilePath);
         privateKey.readPrivateKey(keyFilePath);
-        LOGGER.debug("Key: {}", Hex.toHexString(privateKey.getKey()));
+        LOGGER.debug("Key: {}", Hex.encode(privateKey.getKey()));
         return privateKey;
     }
 }

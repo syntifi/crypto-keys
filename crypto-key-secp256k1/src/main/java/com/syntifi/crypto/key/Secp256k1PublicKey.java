@@ -1,9 +1,9 @@
 package com.syntifi.crypto.key;
 
+import com.syntifi.crypto.key.encdec.Hex;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.*;
-import org.bouncycastle.util.encoders.Hex;
 import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
 import org.web3j.crypto.Sign.SignatureData;
@@ -86,6 +86,6 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         BigInteger pubKey = new BigInteger(key);
         String pubKeyPrefix = pubKey.testBit(0) ? "03" : "02";
         byte[] pubKeyBytes = Arrays.copyOf(key, 32);
-        return Hex.decode(pubKeyPrefix + Hex.toHexString(pubKeyBytes));
+        return Hex.decode(pubKeyPrefix + Hex.encode(pubKeyBytes));
     }
 }
