@@ -4,7 +4,9 @@
 
 # Crypto Keys Java Library
 
-This project wraps public and private keys for common cryptographic functionalities.
+This project wraps public and private keys for common cryptographic functionalities for the following elliptic curves:
+  - [Ed25519](https://en.wikipedia.org/wiki/EdDSA)
+  - [Secp256k1](https://www.secg.org/sec2-v2.pdf)
 
 ## Dependencies
 
@@ -50,3 +52,53 @@ Using maven
     </dependency>
 </dependencies>
 ```
+
+## How to
+
+### 1. [Read a public key from pem file](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PublicKeyTests.java#L74-L81)
+
+```Java
+Ed25519PublicKey publicKey = new Ed25519PublicKey();
+publicKey.readPublicKey("public_key.pem");
+```
+
+```Java
+Secp256k1PublicKey pubKey = new Secp256k1PublicKey();
+publicKey.readPublicKey("public_key.pem");
+```
+
+### 2. [Write a public key to pem file](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PublicKeyTests.java#L50)
+
+```Java
+publicKey.writePublicKey("public_key.pem");
+```
+
+### 3. [Read a private key from pem file](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PrivateKeyTests.java#L76-L83)
+
+```Java
+Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
+privateKey.readPrivateKey("private_key.pem");
+```
+
+```Java
+Secp256k1PrivateKey privateKey = new Secp256k1PrivateKey();
+privateKey.readPrivateKey("private_key.pem");
+```
+
+### 4. [Write a private key to pem file](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PrivateKeyTests.java#L57)
+
+```Java
+privateKey.writePublicKey("public_key.pem");
+```
+
+### 5. [Sign message](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PrivateKeyTests.java#L65-L67)
+
+```Java
+byte[] signature = privateKey.sign("Message".getBytes());
+```
+
+### 6. [Verify Signature](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PublicKeyTests.java#L58-L71)
+
+```Java
+ Boolean verified = publicKey.verify(message.getBytes(), Hex.decode(hexSignature));
+ ```
