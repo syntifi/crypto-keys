@@ -88,7 +88,7 @@ privateKey.readPrivateKey("private_key.pem");
 ### 4. [Write a private key to pem file](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PrivateKeyTests.java#L57)
 
 ```Java
-privateKey.writePublicKey("public_key.pem");
+privateKey.writPrivateKey("private_key.pem");
 ```
 
 ### 5. [Sign message](https://github.com/syntifi/crypto-keys/blob/d0de1acedd8bfb2d4e7d1074649051af7596f695/crypto-key-ed25519/src/test/java/com/syntifi/crypto/key/Ed25519PrivateKeyTests.java#L65-L67)
