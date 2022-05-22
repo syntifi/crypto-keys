@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>MnemonicCodeTest xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../testapidocs/com/syntifi/crypto/key/mnemonic/MnemonicCodeTest.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.syntifi.crypto.key.mnemonic;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.AbstractCryptoTests;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.encdec.Hex;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.mnemonic.exception.MnemonicException;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.slf4j.LoggerFactory;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.*;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * examples at</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * <a href="https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc" target="alexandria_uri">https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05.asciidoc</a>#creating-an-hd-wallet-from-the-seed</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * comparing with the output from</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * <a href="https://iancoleman.io/bip39/" target="alexandria_uri">https://iancoleman.io/bip39/</a></em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="MnemonicCodeTest" href="../../../../../com/syntifi/crypto/key/mnemonic/MnemonicCodeTest.html#MnemonicCodeTest">MnemonicCodeTest</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractCryptoTests" href="../../../../../com/syntifi/crypto/key/AbstractCryptoTests.html#AbstractCryptoTests">AbstractCryptoTests</a> {
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger LOGGER = LoggerFactory.getLogger(MnemonicCodeTest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      @Test
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">void</strong> getSeedFromWordlist_seed_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>          String words = <span class="jxr_string">"army van defense carry jealous true garbage claim echo media make crunch"</span>;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>          byte[] seed = mnemonicCode.toSeed(wordList, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          assertEquals(<span class="jxr_string">"5b56c417303faa3fcba7e57400e120a0ca83ec5a4fc9ffba757fbe63fbd77a89a1a3be4c67196f57c39a88b76373733891bfaba16ed27a813ceed498804c0570"</span>, Hex.encode(seed));
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      @Test
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">void</strong> getEntropyFromWordlist_entropy_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>          String words = <span class="jxr_string">"army van defense carry jealous true garbage claim echo media make crunch"</span>;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          byte[] entropy = mnemonicCode.toEntropy(wordList);
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          assertEquals(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>, Hex.encode(entropy));
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      }
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      @Test
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">void</strong> getWordListFromEntropy_words_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          List&lt;String&gt; w = mnemonicCode.toMnemonic(Hex.decode(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>));
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          String words = <span class="jxr_string">"army van defense carry jealous true garbage claim echo media make crunch"</span>;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>          assertEquals(w, wordList);
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      }
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      @Test
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">void</strong> generateRandomList_should_generate_12_words() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          List&lt;String&gt; words = MnemonicCode.generateSecureRandomWords(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          assertEquals(12, words.size());
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      }
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
+</body>
+</html>
