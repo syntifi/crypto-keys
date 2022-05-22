@@ -4,13 +4,18 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.Signer;
+import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
+import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
+import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 import org.bouncycastle.crypto.signers.Ed25519Signer;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 /**
  * ed25519 implementation of {@link AbstractPrivateKey}
@@ -83,4 +88,23 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
     public AbstractPublicKey derivePublicKey() {
         return new Ed25519PublicKey(privateKeyParameters.generatePublicKey().getEncoded());
     }
+
+    public static Ed25519PrivateKey deriveFromSeed(byte[] seed) {
+        Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
+        privateKey.privateKeyParameters = new Ed25519PrivateKeyParameters(seed, 0);
+        return privateKey;
+    }
+
+    public static Ed25519PrivateKey deriveRandomKey() {
+        SecureRandom rnd = new SecureRandom();
+        Ed25519KeyPairGenerator keyPairGenerator = new Ed25519KeyPairGenerator();
+        keyPairGenerator.init(new Ed25519KeyGenerationParameters(rnd));
+        AsymmetricCipherKeyPair asymmetricCipherKeyPair = keyPairGenerator.generateKeyPair();
+        Ed25519PrivateKeyParameters privateKeyParameters = (Ed25519PrivateKeyParameters) asymmetricCipherKeyPair.getPrivate();
+        Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
+        privateKey.setKey(privateKeyParameters.getEncoded());
+        return privateKey;
+    }
+
+
 }

@@ -104,4 +104,5 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
         byte[] pubKeyBytes = Arrays.copyOf(pubKey.toByteArray(), 32);
         return new Secp256k1PublicKey(Hex.decode(pubKeyPrefix + Hex.encode(pubKeyBytes)));
     }
+
 }

@@ -1,6 +1,9 @@
 package com.syntifi.crypto.key;
 
+import com.syntifi.crypto.key.deterministic.HierarchicalDeterministicKey;
+import com.syntifi.crypto.key.encdec.Base58;
 import com.syntifi.crypto.key.encdec.Hex;
+import com.syntifi.crypto.key.mnemonic.MnemonicCode;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,11 +11,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -71,6 +76,21 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
                 Hex.encode(signature));
 
         LOGGER.debug("Signed as {}", signature);
+    }
+
+    @Test
+    void create_privateKey_from_seed() throws IOException {
+        MnemonicCode mnemonicCode = new MnemonicCode("english");
+        String words =  "shoot island position soft burden budget tooth cruel issue economy destroy above";
+        byte[] seed = mnemonicCode.toSeed(Arrays.asList(words.split(" ")), "");
+        //byte[] seed = Hex.decode("577cd910aede2582668a741d476b45e7998e905a4286f701b87b25923501f9d4ea19513b460bcccbc069ebbe4327a59af3d6463045c4b6fa21a5e7004ccfcc3e");
+        byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
+        int[] path = {44, 397, 0};
+
+        byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
+        Ed25519PrivateKey pk = Ed25519PrivateKey.deriveFromSeed(key);
+        //assertEquals("3jFpZEcbhcjpqVE27zU3d7WHcS7Wq716v5WryU8Tj4EaNTHTj8iAhtPW7KCdFV2fnjNf9toawUbdqZnhrRtLKe6w", Base58.encode(pk.getKey()));
+        assertTrue(true);
     }
 
     private Ed25519PrivateKey readPrivateKey(String privateKeyPath) throws URISyntaxException, IOException {

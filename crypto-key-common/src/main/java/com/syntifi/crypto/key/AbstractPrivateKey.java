@@ -59,4 +59,6 @@ public abstract class AbstractPrivateKey {
      * @return the derived {@link AbstractPublicKey}
      */
     public abstract AbstractPublicKey derivePublicKey();
+
+
 }
