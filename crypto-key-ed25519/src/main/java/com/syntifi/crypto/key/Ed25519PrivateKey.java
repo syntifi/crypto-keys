@@ -101,9 +101,7 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
         keyPairGenerator.init(new Ed25519KeyGenerationParameters(rnd));
         AsymmetricCipherKeyPair asymmetricCipherKeyPair = keyPairGenerator.generateKeyPair();
         Ed25519PrivateKeyParameters privateKeyParameters = (Ed25519PrivateKeyParameters) asymmetricCipherKeyPair.getPrivate();
-        Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
-        privateKey.setKey(privateKeyParameters.getEncoded());
-        return privateKey;
+        return new Ed25519PrivateKey(privateKeyParameters.getEncoded());
     }
 
 

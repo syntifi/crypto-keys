@@ -39,6 +39,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -248,5 +249,13 @@ public class MnemonicCode {
      */
     public void check(List<String> words) throws MnemonicException {
         toEntropy(words);
+    }
+
+    public static List<String> generateSecureRandomWords(String language) throws IOException, MnemonicException.MnemonicLengthException {
+        MnemonicCode mnemonicCode = new MnemonicCode(language);
+        SecureRandom rnd = new SecureRandom();
+        byte[] entropy = new byte[16];
+        rnd.nextBytes(entropy);
+        return mnemonicCode.toMnemonic(entropy);
     }
 }

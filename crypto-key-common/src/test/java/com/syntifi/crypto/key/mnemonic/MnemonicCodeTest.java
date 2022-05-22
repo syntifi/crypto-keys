@@ -50,5 +50,9 @@ public class MnemonicCodeTest extends AbstractCryptoTests {
         assertEquals(w, wordList);
     }
 
-
+    @Test
+    void generateRandomList_should_generate_12_words() throws IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+        List<String> words = MnemonicCode.generateSecureRandomWords("english");
+        assertEquals(12, words.size());
+    }
 }
