@@ -83,14 +83,18 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
         MnemonicCode mnemonicCode = new MnemonicCode("english");
         String words =  "shoot island position soft burden budget tooth cruel issue economy destroy above";
         byte[] seed = mnemonicCode.toSeed(Arrays.asList(words.split(" ")), "");
-        //byte[] seed = Hex.decode("577cd910aede2582668a741d476b45e7998e905a4286f701b87b25923501f9d4ea19513b460bcccbc069ebbe4327a59af3d6463045c4b6fa21a5e7004ccfcc3e");
+        Ed25519PrivateKey pk1 = Ed25519PrivateKey.deriveFromSeed(seed);
+
         byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
         int[] path = {44, 397, 0};
-
         byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
-        Ed25519PrivateKey pk = Ed25519PrivateKey.deriveFromSeed(key);
-        //assertEquals("3jFpZEcbhcjpqVE27zU3d7WHcS7Wq716v5WryU8Tj4EaNTHTj8iAhtPW7KCdFV2fnjNf9toawUbdqZnhrRtLKe6w", Base58.encode(pk.getKey()));
-        assertTrue(true);
+        Ed25519PrivateKey pk2 = new Ed25519PrivateKey(key);
+        assertEquals("88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498",
+                Hex.encode(pk1.getKey()));
+        assertEquals(Hex.encode(pk2.getKey()), Hex.encode(pk1.getKey()));
+        assertEquals("0c91f6106ff835c0195d5388565a2d69e25038a7e23d26198f85caf6594117ec",
+                Hex.encode(pk1.derivePublicKey().getKey()));
+        assertEquals(Hex.encode(pk2.derivePublicKey().getKey()), Hex.encode(pk1.derivePublicKey().getKey()));
     }
 
     private Ed25519PrivateKey readPrivateKey(String privateKeyPath) throws URISyntaxException, IOException {

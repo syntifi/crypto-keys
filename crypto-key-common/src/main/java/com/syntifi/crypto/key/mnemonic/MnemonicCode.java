@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * @since 0.3.0
+ * @since 0.2.0
  */
 
 public class MnemonicCode {
@@ -73,7 +73,7 @@ public class MnemonicCode {
      * Creates an MnemonicCode object, initializing with words read from the supplied input stream.
      * If a wordListDigest is supplied the digest of the words will be checked.
      *
-     * @param language
+     * @param language words languages
      * @throws IOException
      * @throws IllegalArgumentException
      */
@@ -106,6 +106,10 @@ public class MnemonicCode {
 
     /**
      * Convert mnemonic word list to seed.
+     *
+     * @param words list of words
+     * @param passphrase password, use "" if not required
+     * @return
      */
     public byte[] toSeed(List<String> words, String passphrase) {
         if (passphrase == null)
@@ -151,6 +155,12 @@ public class MnemonicCode {
 
     /**
      * Convert mnemonic word list to original entropy value.
+     *
+     * @param words list of words
+     * @return entropy byte array
+     * @throws MnemonicException.MnemonicLengthException
+     * @throws MnemonicException.MnemonicWordException
+     * @throws MnemonicException.MnemonicChecksumException
      */
     public byte[] toEntropy(List<String> words) throws MnemonicException.MnemonicLengthException,
             MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException {
@@ -202,6 +212,10 @@ public class MnemonicCode {
 
     /**
      * Convert entropy data to mnemonic word list.
+     *
+     * @param entropy byte array
+     * @return list of words
+     * @throws MnemonicException.MnemonicLengthException
      */
     public List<String> toMnemonic(byte[] entropy) throws MnemonicException.MnemonicLengthException {
         if (entropy.length % 4 > 0)
@@ -246,11 +260,21 @@ public class MnemonicCode {
 
     /**
      * Check to see if a mnemonic word list is valid.
+     *
+     * @param words list of words
+     * @throws MnemonicException
      */
     public void check(List<String> words) throws MnemonicException {
         toEntropy(words);
     }
 
+    /**
+     *
+     * @param language
+     * @return
+     * @throws IOException
+     * @throws MnemonicException.MnemonicLengthException
+     */
     public static List<String> generateSecureRandomWords(String language) throws IOException, MnemonicException.MnemonicLengthException {
         MnemonicCode mnemonicCode = new MnemonicCode(language);
         SecureRandom rnd = new SecureRandom();

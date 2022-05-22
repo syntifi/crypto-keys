@@ -11,6 +11,16 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 //hMac.init(new KeyParameter("ed25519 seed".getBytes(StandardCharsets.UTF_8)));
+
+/**
+ * The procedure to implement BIP32 or SLIP 10 to generate deterministic keys hierarchically
+ * https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
+ * https://github.com/satoshilabs/slips/blob/master/slip-0010.md
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.2.0
+ */
 public class HierarchicalDeterministicKey {
     private final static Long MAX_VALUE_INDEX = 2147483648L;
 
@@ -29,16 +39,22 @@ public class HierarchicalDeterministicKey {
         return key;
     }
 
-    private static byte[] getMasterKeyFromSeed(byte[] seed, byte[] init) {
+    /**
+     *
+     * @param seed bytes
+     * @param key initial Hmac value
+     * @return byte array
+     */
+    public static byte[] getMasterKeyFromSeed(byte[] seed, byte[] key) {
         HMac hMac = new HMac(new SHA512Digest());
-        hMac.init(new KeyParameter(init));
+        hMac.init(new KeyParameter(key));
         hMac.update(seed, 0, seed.length);
         byte[] result = new byte[hMac.getMacSize()];
         hMac.doFinal(result, 0);
         return result;
     }
 
-    private static byte[] childKeyDerivation(byte[] key, byte[] chainCode, byte[] index) throws IOException {
+    public static byte[] childKeyDerivation(byte[] key, byte[] chainCode, byte[] index) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.write(Hex.decode("00"));
         os.write(key);

@@ -1,5 +1,7 @@
 package com.syntifi.crypto.key;
 
+import com.syntifi.crypto.key.deterministic.HierarchicalDeterministicKey;
+import com.syntifi.crypto.key.encdec.Hex;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.*;
@@ -15,7 +17,9 @@ import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 import org.bouncycastle.crypto.signers.Ed25519Signer;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.List;
 
 /**
  * ed25519 implementation of {@link AbstractPrivateKey}
@@ -89,10 +93,11 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
         return new Ed25519PublicKey(privateKeyParameters.generatePublicKey().getEncoded());
     }
 
-    public static Ed25519PrivateKey deriveFromSeed(byte[] seed) {
-        Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
-        privateKey.privateKeyParameters = new Ed25519PrivateKeyParameters(seed, 0);
-        return privateKey;
+    public static Ed25519PrivateKey deriveFromSeed(byte[] seed) throws IOException {
+        byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
+        int[] path = {44, 397, 0};
+        byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
+        return new Ed25519PrivateKey(key);
     }
 
     public static Ed25519PrivateKey deriveRandomKey() {
