@@ -1,5 +1,6 @@
 package com.syntifi.crypto.key;
 
+import com.syntifi.crypto.key.encdec.Base58;
 import com.syntifi.crypto.key.deterministic.HierarchicalDeterministicKey;
 import com.syntifi.crypto.key.encdec.Base58;
 import com.syntifi.crypto.key.encdec.Hex;
@@ -76,6 +77,16 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
                 Hex.encode(signature));
 
         LOGGER.debug("Signed as {}", signature);
+    }
+
+    @Test
+    void derived_public_key_should_match_generated() {
+        String base58GeneratedPrivateKey = "32UfEkBGTFpfu6M7RebN1JqMDrdf1YyztgYmcUG5XcRkEraJioFZLPtBvYVmAVvnjWAToSsWScJYSFViv8MaATRF";
+        String base58GeneratedPublicKey = "F8jARHGZdHqnwrxrnv1pFVzzirXZR2vJzeYbvwQbxZyP";
+
+        Ed25519PrivateKey pk = new Ed25519PrivateKey(Base58.decode(base58GeneratedPrivateKey));
+
+        assertEquals(base58GeneratedPublicKey, Base58.encode(pk.derivePublicKey().getKey()));
     }
 
     @Test
