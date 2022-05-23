@@ -9,47 +9,48 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.syntifi.crypto.key.deterministic;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.encdec.Hex;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.mnemonic.MnemonicCode;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.slf4j.LoggerFactory;
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.nio.charset.StandardCharsets;
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
-<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertTrue;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="HierarchicalDeterministicKeyTest" href="../../../../../com/syntifi/crypto/key/deterministic/HierarchicalDeterministicKeyTest.html#HierarchicalDeterministicKeyTest">HierarchicalDeterministicKeyTest</a> {
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger LOGGER = LoggerFactory.getLogger(HierarchicalDeterministicKey.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.mnemonic.Language;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.mnemonic.MnemonicCode;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> org.junit.jupiter.api.Test;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.slf4j.LoggerFactory;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.nio.charset.StandardCharsets;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertEquals;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.jupiter.api.Assertions.assertTrue;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="HierarchicalDeterministicKeyTest" href="../../../../../com/syntifi/crypto/key/deterministic/HierarchicalDeterministicKeyTest.html#HierarchicalDeterministicKeyTest">HierarchicalDeterministicKeyTest</a> {
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger LOGGER = LoggerFactory.getLogger(HierarchicalDeterministicKey.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>      @Test
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>      <strong class="jxr_keyword">void</strong> getMasterKeyFromSeed_seed_should_match() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>          byte[] init = <span class="jxr_string">"ed25519 seed"</span>.getBytes(StandardCharsets.UTF_8);
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>          assertEquals(<span class="jxr_string">"a89c4655ab993cf786e4a8517899f0e5ddbdb35ebedc05da341b510bf0c5b8902eb38e1fb071b5a75f0e3b176ddea874ce81fafd6c44cd74c3c381ac5a7ed9fc"</span>,
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>                  Hex.encode(HierarchicalDeterministicKey.getMasterKeyFromSeed(
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>                          <span class="jxr_string">"randomkey"</span>.getBytes(StandardCharsets.UTF_8), init)));
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>      }
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>      @Test
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">void</strong> getKeyFromSeed_seed_should_match() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>          String words = <span class="jxr_string">"shoot island position soft burden budget tooth cruel issue economy destroy above"</span>;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>          byte[] seed = mnemonicCode.toSeed(Arrays.asList(words.split(<span class="jxr_string">" "</span>)), <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          assertEquals(<span class="jxr_string">"577cd910aede2582668a741d476b45e7998e905a4286f701b87b25923501f9d4ea19513b460bcccbc069ebbe4327a59af3d6463045c4b6fa21a5e7004ccfcc3e"</span>,
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>                  Hex.encode(seed));
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>          byte[] init = <span class="jxr_string">"ed25519 seed"</span>.getBytes(StandardCharsets.UTF_8);
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>          assertEquals(<span class="jxr_string">"17ffa27bec941a557d88ef8d491171eab1dcb147b24b8c7f034766b5a2c425ab"</span> +
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>                  <span class="jxr_string">"6f1eef3d85f72c2500f3d42cad8632725e830d20ffa61d8dfda1c961c84302f0"</span>,
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>                  Hex.encode(HierarchicalDeterministicKey.getMasterKeyFromSeed(seed, init)));
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>          <strong class="jxr_keyword">int</strong>[] path = {44, 397, 0};
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>          assertEquals(<span class="jxr_string">"88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498"</span>,
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>                  Hex.encode(HierarchicalDeterministicKey.getFromSeed(seed, init, path)));
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>          assertTrue(<strong class="jxr_keyword">true</strong>);
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>      }
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  }
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>      @Test
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">void</strong> getMasterKeyFromSeed_seed_should_match() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>          byte[] init = <span class="jxr_string">"ed25519 seed"</span>.getBytes(StandardCharsets.UTF_8);
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>          assertEquals(<span class="jxr_string">"a89c4655ab993cf786e4a8517899f0e5ddbdb35ebedc05da341b510bf0c5b8902eb38e1fb071b5a75f0e3b176ddea874ce81fafd6c44cd74c3c381ac5a7ed9fc"</span>,
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>                  Hex.encode(HierarchicalDeterministicKey.getMasterKeyFromSeed(
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>                          <span class="jxr_string">"randomkey"</span>.getBytes(StandardCharsets.UTF_8), init)));
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      }
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      @Test
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">void</strong> getKeyFromSeed_seed_should_match() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.EN);
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          String words = <span class="jxr_string">"shoot island position soft burden budget tooth cruel issue economy destroy above"</span>;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>          byte[] seed = mnemonicCode.toSeed(Arrays.asList(words.split(<span class="jxr_string">" "</span>)), <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>          assertEquals(<span class="jxr_string">"577cd910aede2582668a741d476b45e7998e905a4286f701b87b25923501f9d4ea19513b460bcccbc069ebbe4327a59af3d6463045c4b6fa21a5e7004ccfcc3e"</span>,
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>                  Hex.encode(seed));
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>          byte[] init = <span class="jxr_string">"ed25519 seed"</span>.getBytes(StandardCharsets.UTF_8);
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>          assertEquals(<span class="jxr_string">"17ffa27bec941a557d88ef8d491171eab1dcb147b24b8c7f034766b5a2c425ab"</span> +
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>                  <span class="jxr_string">"6f1eef3d85f72c2500f3d42cad8632725e830d20ffa61d8dfda1c961c84302f0"</span>,
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>                  Hex.encode(HierarchicalDeterministicKey.getMasterKeyFromSeed(seed, init)));
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          <strong class="jxr_keyword">int</strong>[] path = {44, 397, 0};
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          assertEquals(<span class="jxr_string">"88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498"</span>,
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>                  Hex.encode(HierarchicalDeterministicKey.getFromSeed(seed, init, path)));
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          assertTrue(<strong class="jxr_keyword">true</strong>);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      }
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>
