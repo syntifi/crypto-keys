@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">void</strong> getSeedFromWordlist_seed_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>          String words = <span class="jxr_string">"army van defense carry jealous true garbage claim echo media make crunch"</span>;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.EN);
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>          byte[] seed = mnemonicCode.toSeed(wordList, <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>          assertEquals(<span class="jxr_string">"5b56c417303faa3fcba7e57400e120a0ca83ec5a4fc9ffba757fbe63fbd77a89a1a3be4c67196f57c39a88b76373733891bfaba16ed27a813ceed498804c0570"</span>, Hex.encode(seed));
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
@@ -44,14 +44,14 @@
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>      <strong class="jxr_keyword">void</strong> getEntropyFromWordlist_entropy_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>          String words = <span class="jxr_string">"army van defense carry jealous true garbage claim echo media make crunch"</span>;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.EN);
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>          byte[] entropy = mnemonicCode.toEntropy(wordList);
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>          assertEquals(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>, Hex.encode(entropy));
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      }
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      @Test
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">void</strong> getWordListFromEntropy_words_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(<span class="jxr_string">"english"</span>);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.EN);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>          List&lt;String&gt; w = mnemonicCode.toMnemonic(Hex.decode(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>));
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>          String words = <span class="jxr_string">"army van defense carry jealous true garbage claim echo media make crunch"</span>;
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
@@ -60,10 +60,57 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>      @Test
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>      <strong class="jxr_keyword">void</strong> generateRandomList_should_generate_12_words() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>          List&lt;String&gt; words = MnemonicCode.generateSecureRandomWords(<span class="jxr_string">"english"</span>);
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>          assertEquals(12, words.size());
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>      }
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>  }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.EN);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          List&lt;String&gt; words = mnemonicCode.generateSecureRandomWords();
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          assertEquals(12, words.size());
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      }
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      @Test
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">void</strong> getEntropyAndSeedFromWordlistPT_entropy_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>          String words = <span class="jxr_string">"alfinete trilogia citar berro graveto teimar evacuar broa debitar jurista irritado cerrado"</span>;
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.PT);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          byte[] entropy = mnemonicCode.toEntropy(wordList);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          assertEquals(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>, Hex.encode(entropy));
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          byte[] seed = mnemonicCode.toSeed(wordList, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          assertEquals(<span class="jxr_string">"0d2d2982b58e3faf152b5e3276198829bea74db45fdbce7fa8f2e2e5c2ac8cd0f634bc35e33960456d09299af65763b7c094ea52c88f60cbb37251c067c6a9f4"</span>, Hex.encode(seed));
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      }
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      @Test
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">void</strong> getEntropyAndSeedFromWordlistFR_entropy_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>          String words = <span class="jxr_string">"amour troupeau couteau brèche gustatif tenaille exécuter capuche dicter lagune jaune cogner"</span>;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.FR);
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>          byte[] entropy = mnemonicCode.toEntropy(wordList);
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>          assertEquals(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>, Hex.encode(entropy));
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>          byte[] seed = mnemonicCode.toSeed(wordList, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          assertEquals(<span class="jxr_string">"895debca7a86928a0c4cb5712aefd6d4cf4c7cfd23448ccd5418932e4f00c940089a3501f4f33eaf115f1a689d6c1e54b6bb6d5f40e4791234cb2ac87d62df68"</span>, Hex.encode(seed));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      @Test
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">void</strong> getEntropyAndSeedFromWordlistES_entropy_should_match() <strong class="jxr_keyword">throws</strong> IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          String words = <span class="jxr_string">"amistad túnica costa broma juicio toalla furgón caña domingo masivo maldad código"</span>;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          List&lt;String&gt; wordList = Arrays.asList(words.split(<span class="jxr_string">" "</span>));
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>          MnemonicCode mnemonicCode = <strong class="jxr_keyword">new</strong> MnemonicCode(Language.ES);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>          byte[] entropy = mnemonicCode.toEntropy(wordList);
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          assertEquals(<span class="jxr_string">"0c1e24e5917779d297e14d45f14e1a1a"</span>, Hex.encode(entropy));
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>          byte[] seed = mnemonicCode.toSeed(wordList, <span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          assertEquals(<span class="jxr_string">"847ebfae3823c7ebf1cb2e8313774784751f554bd6c772c4966a860920852f4e96a058f191b0140a3190ca2d47e7766cfa69aae9a2a44b457ef86df1336e6847"</span>, Hex.encode(seed));
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      }
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  <em class="jxr_comment">/*TODO: Chinese</em>
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  <em class="jxr_comment">    @Test</em>
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  <em class="jxr_comment">    void getEntropyAndSeedFromWordlistCNSimplified_entropy_should_match() throws IOException, MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException, MnemonicException.MnemonicLengthException {</em>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  <em class="jxr_comment">        String words = "点 挡 眼 器 哥 舒 久 示 止 累 夏 便";</em>
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  <em class="jxr_comment">        List&lt;String&gt; wordList = Arrays.asList(words.split(" "));</em>
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  <em class="jxr_comment">        MnemonicCode mnemonicCode = new MnemonicCode(Language.CNS);</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_comment">        byte[] entropy = mnemonicCode.toEntropy(wordList);</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_comment">        assertEquals("0c1e24e5917779d297e14d45f14e1a1a", Hex.encode(entropy));</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> <em class="jxr_comment">        byte[] seed = mnemonicCode.toSeed(wordList, "");</em>
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> <em class="jxr_comment">        assertEquals("ca43a6850c4dc61c05d487224e827cc9b5bcab49fd28a206bcf19f11c39d9dd4329e55e33940ae551b9fa295c9b73770c77d878fd63dc000b3995f4dc62f3f63", Hex.encode(seed));</em>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> <em class="jxr_comment">    }</em>
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> <em class="jxr_comment">*/</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>
