@@ -93,9 +93,8 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
         return new Ed25519PublicKey(privateKeyParameters.generatePublicKey().getEncoded());
     }
 
-    public static Ed25519PrivateKey deriveFromSeed(byte[] seed) throws IOException {
+    public static Ed25519PrivateKey deriveFromSeed(byte[] seed, int[] path) throws IOException {
         byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
-        int[] path = {44, 397, 0};
         byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
         return new Ed25519PrivateKey(key);
     }

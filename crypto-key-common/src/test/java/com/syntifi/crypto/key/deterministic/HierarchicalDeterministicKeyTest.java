@@ -1,6 +1,7 @@
 package com.syntifi.crypto.key.deterministic;
 
 import com.syntifi.crypto.key.encdec.Hex;
+import com.syntifi.crypto.key.mnemonic.Language;
 import com.syntifi.crypto.key.mnemonic.MnemonicCode;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class HierarchicalDeterministicKeyTest {
 
     @Test
     void getKeyFromSeed_seed_should_match() throws IOException {
-        MnemonicCode mnemonicCode = new MnemonicCode("english");
+        MnemonicCode mnemonicCode = new MnemonicCode(Language.EN);
         String words = "shoot island position soft burden budget tooth cruel issue economy destroy above";
         byte[] seed = mnemonicCode.toSeed(Arrays.asList(words.split(" ")), "");
         assertEquals("577cd910aede2582668a741d476b45e7998e905a4286f701b87b25923501f9d4ea19513b460bcccbc069ebbe4327a59af3d6463045c4b6fa21a5e7004ccfcc3e",

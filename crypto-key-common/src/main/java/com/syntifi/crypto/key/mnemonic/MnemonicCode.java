@@ -22,6 +22,7 @@ package com.syntifi.crypto.key.mnemonic;
  * - Removing logs, watches, ...
  * - Removing internal dependencies to helper/utils
  * - Adding method to secure random derive the key
+ * - Adding support for multiple languages
  *
  */
 
@@ -37,14 +38,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Collections;
-import java.util.ArrayList;
+import java.text.Collator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -60,14 +57,9 @@ import java.util.stream.Collectors;
  */
 
 public class MnemonicCode {
-    private static final Map<String, String> checkSum = new HashMap<String, String>() {{
-        put("english", "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db");
-    }};
-    private static final Map<String, Charset> charSet = new HashMap<String, Charset>() {{
-        put("english", StandardCharsets.UTF_8);
-    }};
     private static final int PBKDF2_ROUNDS = 2048;
     private final List<String> wordList;
+    private Language language;
 
     /**
      * Creates an MnemonicCode object, initializing with words read from the supplied input stream.
@@ -77,13 +69,12 @@ public class MnemonicCode {
      * @throws IOException
      * @throws IllegalArgumentException
      */
-    public MnemonicCode(String language) throws IOException, IllegalArgumentException {
-        InputStream wordStream = getClass().getResourceAsStream("/" + language + ".txt");
+    public MnemonicCode(Language language) throws IOException, IllegalArgumentException {
+        this.language = language;
+        InputStream wordStream = getClass().getResourceAsStream("/" + language.getFileName());
         if (wordStream == null)
-            throw new FileNotFoundException(language);
-        String checksum = checkSum.get(language);
-        Charset charset = charSet.get(language);
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(wordStream, charset))) {
+            throw new FileNotFoundException(language.getFileName());
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(wordStream, language.getCharset()))) {
             this.wordList = br.lines()
                     .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
         }
@@ -92,14 +83,14 @@ public class MnemonicCode {
             throw new IllegalArgumentException("input stream did not contain 2048 bytes");
 
         // If a wordListDigest is supplied check to make sure it matches.
-        if (checksum != null) {
+        if (language.getCheckSum()!= null) {
             StringBuilder stringBuilder = new StringBuilder();
             for (String s : this.getWordList()) {
                 stringBuilder.append(s);
             }
-            byte[] digest = Sha256.digest(String.valueOf(stringBuilder).getBytes(charset));
+            byte[] digest = Sha256.digest(String.valueOf(stringBuilder).getBytes(language.getCharset()));
             String hexDigest = Hex.encode(digest);
-            if (!hexDigest.equals(checksum))
+            if (!hexDigest.equals(language.getCheckSum()))
                 throw new IllegalArgumentException("wordlist checksum mismatch");
         }
     }
@@ -176,9 +167,12 @@ public class MnemonicCode {
         int concatLenBits = words.size() * 11;
         boolean[] concatBits = new boolean[concatLenBits];
         int wordindex = 0;
+        Collator collator = Collator.getInstance(language.getLocale());
+        //collator.setDecomposition(Collator.FULL_DECOMPOSITION);
+        //collator.setStrength(Collator.PRIMARY);
         for (String word : words) {
             // Find the words index in the wordlist.
-            int ndx = Collections.binarySearch(this.wordList, word);
+            int ndx = Collections.binarySearch(this.wordList, word, collator);
             if (ndx < 0)
                 throw new MnemonicException.MnemonicWordException(word);
 
@@ -269,14 +263,14 @@ public class MnemonicCode {
     }
 
     /**
+     * Method to generate words from securerandom entropy
      *
-     * @param language
-     * @return
+     * @return list of mnemonic words
      * @throws IOException
      * @throws MnemonicException.MnemonicLengthException
      */
-    public static List<String> generateSecureRandomWords(String language) throws IOException, MnemonicException.MnemonicLengthException {
-        MnemonicCode mnemonicCode = new MnemonicCode(language);
+    public List<String> generateSecureRandomWords() throws IOException, MnemonicException.MnemonicLengthException {
+        MnemonicCode mnemonicCode = new MnemonicCode(this.language);
         SecureRandom rnd = new SecureRandom();
         byte[] entropy = new byte[16];
         rnd.nextBytes(entropy);

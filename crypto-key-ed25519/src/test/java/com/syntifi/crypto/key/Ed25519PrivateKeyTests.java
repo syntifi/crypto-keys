@@ -4,6 +4,7 @@ import com.syntifi.crypto.key.encdec.Base58;
 import com.syntifi.crypto.key.deterministic.HierarchicalDeterministicKey;
 import com.syntifi.crypto.key.encdec.Base58;
 import com.syntifi.crypto.key.encdec.Hex;
+import com.syntifi.crypto.key.mnemonic.Language;
 import com.syntifi.crypto.key.mnemonic.MnemonicCode;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -91,13 +92,13 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
 
     @Test
     void create_privateKey_from_seed() throws IOException {
-        MnemonicCode mnemonicCode = new MnemonicCode("english");
+        MnemonicCode mnemonicCode = new MnemonicCode(Language.EN);
         String words =  "shoot island position soft burden budget tooth cruel issue economy destroy above";
         byte[] seed = mnemonicCode.toSeed(Arrays.asList(words.split(" ")), "");
-        Ed25519PrivateKey pk1 = Ed25519PrivateKey.deriveFromSeed(seed);
-
-        byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
         int[] path = {44, 397, 0};
+
+        Ed25519PrivateKey pk1 = Ed25519PrivateKey.deriveFromSeed(seed, path);
+        byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
         byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
         Ed25519PrivateKey pk2 = new Ed25519PrivateKey(key);
         assertEquals("88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498",
