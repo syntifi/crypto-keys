@@ -17,7 +17,7 @@ package com.syntifi.crypto.key.mnemonic;
  * limitations under the License.
  *
  * CHANGES:
- * - Removing static constructor
+ * - Removing static initializer
  * - Using own Hex and Sha256 implementations
  * - Removing logs, watches, ...
  * - Removing internal dependencies to helper/utils
@@ -53,23 +53,21 @@ import java.util.stream.Collectors;
  *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * @since 0.2.0
+ * @since 0.3.0
  */
-
 public class MnemonicCode {
     private static final int PBKDF2_ROUNDS = 2048;
     private final List<String> wordList;
-    private Language language;
+    private final Language language;
 
     /**
      * Creates an MnemonicCode object, initializing with words read from the supplied input stream.
      * If a wordListDigest is supplied the digest of the words will be checked.
      *
-     * @param language words languages
-     * @throws IOException
-     * @throws IllegalArgumentException
+     * @param language      words languages
+     * @throws IOException  if an error ocrurs when processing the file buffers
      */
-    public MnemonicCode(Language language) throws IOException, IllegalArgumentException {
+    public MnemonicCode(Language language) throws IOException {
         this.language = language;
         InputStream wordStream = getClass().getResourceAsStream("/" + language.getFileName());
         if (wordStream == null)
@@ -100,7 +98,7 @@ public class MnemonicCode {
      *
      * @param words list of words
      * @param passphrase password, use "" if not required
-     * @return
+     * @return derived seed in byte array
      */
     public byte[] toSeed(List<String> words, String passphrase) {
         if (passphrase == null)
@@ -149,9 +147,9 @@ public class MnemonicCode {
      *
      * @param words list of words
      * @return entropy byte array
-     * @throws MnemonicException.MnemonicLengthException
-     * @throws MnemonicException.MnemonicWordException
-     * @throws MnemonicException.MnemonicChecksumException
+     * @throws MnemonicException.MnemonicLengthException if the number of words in the list is not multiple of 3 or empty
+     * @throws MnemonicException.MnemonicWordException   if a word in the list is not part of the dictionary
+     * @throws MnemonicException.MnemonicChecksumException if the checksum of the file does not match the specified one
      */
     public byte[] toEntropy(List<String> words) throws MnemonicException.MnemonicLengthException,
             MnemonicException.MnemonicWordException, MnemonicException.MnemonicChecksumException {
@@ -209,7 +207,7 @@ public class MnemonicCode {
      *
      * @param entropy byte array
      * @return list of words
-     * @throws MnemonicException.MnemonicLengthException
+     * @throws MnemonicException.MnemonicLengthException if the number of words in the list is not multiple of 3 or empty
      */
     public List<String> toMnemonic(byte[] entropy) throws MnemonicException.MnemonicLengthException {
         if (entropy.length % 4 > 0)
@@ -256,7 +254,7 @@ public class MnemonicCode {
      * Check to see if a mnemonic word list is valid.
      *
      * @param words list of words
-     * @throws MnemonicException
+     * @throws MnemonicException if an errors occurs on reading the dictionary of on the given words
      */
     public void check(List<String> words) throws MnemonicException {
         toEntropy(words);
@@ -266,8 +264,8 @@ public class MnemonicCode {
      * Method to generate words from securerandom entropy
      *
      * @return list of mnemonic words
-     * @throws IOException
-     * @throws MnemonicException.MnemonicLengthException
+     * @throws IOException if an error occurs in reading the dictionary file
+     * @throws MnemonicException.MnemonicLengthException if the number of words in the list is not multiple of 3 or empty
      */
     public List<String> generateSecureRandomWords() throws IOException, MnemonicException.MnemonicLengthException {
         MnemonicCode mnemonicCode = new MnemonicCode(this.language);

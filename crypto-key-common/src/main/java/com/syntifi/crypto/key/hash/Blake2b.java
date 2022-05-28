@@ -5,7 +5,6 @@ import org.bouncycastle.crypto.digests.Blake2bDigest;
 /**
  * Blake2 Hash helper class
  *
- *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
  * @since 0.2.0

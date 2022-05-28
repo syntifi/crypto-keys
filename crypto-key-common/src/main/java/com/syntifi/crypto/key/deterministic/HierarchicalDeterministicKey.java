@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-//hMac.init(new KeyParameter("ed25519 seed".getBytes(StandardCharsets.UTF_8)));
-
 /**
  * The procedure to implement BIP32 or SLIP 10 to generate deterministic keys hierarchically
  * https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
@@ -19,31 +17,40 @@ import java.util.Arrays;
  *
  * @author Alexandre Carvalho
  * @author Andre Bertolace
- * @since 0.2.0
+ * @since 0.3.0
  */
 public class HierarchicalDeterministicKey {
     private final static Long MAX_VALUE_INDEX = 2147483648L;
 
+    /**
+     *
+     * @param seed           byte array containing the seed
+     * @param init           chaincode, that is the rightmost 32 bytes of the key
+     * @param derivationPath path to follow when deriving the key
+     * @return derived key in byte array
+     * @throws IOException if an error occurs when processing the bytestream
+     */
     public static byte[] getFromSeed(byte[] seed, byte[] init, int[] derivationPath) throws IOException {
-        byte[] result = HierarchicalDeterministicKey.getMasterKeyFromSeed(seed, init);
-        byte[] key;
-        byte[] chainCode;
-        key = Arrays.copyOfRange(result, 0, 32);
-        chainCode = Arrays.copyOfRange(result, 32, 64);
+        byte[] key = HierarchicalDeterministicKey.getMasterKeyFromSeed(seed, init);
+        byte[] iL;
+        byte[] iR;
+        iL = Arrays.copyOfRange(key, 0, 32);
+        iR = Arrays.copyOfRange(key, 32, 64);
         for (int i : derivationPath) {
-            byte[] keyi = HierarchicalDeterministicKey.childKeyDerivation(
-                    key, chainCode, HierarchicalDeterministicKey.longToBytes(MAX_VALUE_INDEX + i));
-            key = Arrays.copyOfRange(keyi, 0, 32);
-            chainCode = Arrays.copyOfRange(keyi, 32, 64);
+            key = HierarchicalDeterministicKey.childKeyDerivation(
+                    iL, iR, HierarchicalDeterministicKey.longToBytes(MAX_VALUE_INDEX + i));
+            iL = Arrays.copyOfRange(key, 0, 32);
+            iR = Arrays.copyOfRange(key, 32, 64);
         }
         return key;
     }
 
     /**
+     * Derives the masterkey given a seed byte array
      *
-     * @param seed bytes
+     * @param seed byte array containing the seed
      * @param key initial Hmac value
-     * @return byte array
+     * @return master key as a byte array
      */
     public static byte[] getMasterKeyFromSeed(byte[] seed, byte[] key) {
         HMac hMac = new HMac(new SHA512Digest());
@@ -54,11 +61,20 @@ public class HierarchicalDeterministicKey {
         return result;
     }
 
-    public static byte[] childKeyDerivation(byte[] key, byte[] chainCode, byte[] index) throws IOException {
+    /**
+     * CKD function in Bipt32 and Slip10
+     *
+     * @param key        master key, that is the leftmost 32 bytes of the key
+     * @param chainCode  hierarchical chain code 'a/b/c' but in array format: { a, b, c}
+     * @param init       chaincode, that is the rightmost 32 bytes of the key
+     * @return master key as a byte array
+     * @throws IOException if an error occurs when processing the bytestream
+     */
+    public static byte[] childKeyDerivation(byte[] key, byte[] chainCode, byte[] init) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.write(Hex.decode("00"));
         os.write(key);
-        os.write(Arrays.copyOfRange(index, 4, 8));
+        os.write(Arrays.copyOfRange(init, 4, 8));
         HMac hMac = new HMac(new SHA512Digest());
         hMac.init(new KeyParameter(chainCode));
         hMac.update(os.toByteArray(), 0, os.size());

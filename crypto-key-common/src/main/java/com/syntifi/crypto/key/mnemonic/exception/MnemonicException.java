@@ -18,8 +18,11 @@ package com.syntifi.crypto.key.mnemonic.exception;
 
 /**
  * Exceptions thrown by the MnemonicCode module.
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.3.0
  */
-@SuppressWarnings("serial")
 public class MnemonicException extends Exception {
     public MnemonicException() {
         super();

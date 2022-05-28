@@ -19,7 +19,7 @@ public class HierarchicalDeterministicKeyTest {
 
 
     @Test
-    void getMasterKeyFromSeed_seed_should_match() throws IOException {
+    void getMasterKeyFromSeed_seed_should_match() {
         byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
         assertEquals("a89c4655ab993cf786e4a8517899f0e5ddbdb35ebedc05da341b510bf0c5b8902eb38e1fb071b5a75f0e3b176ddea874ce81fafd6c44cd74c3c381ac5a7ed9fc",
                 Hex.encode(HierarchicalDeterministicKey.getMasterKeyFromSeed(
@@ -38,7 +38,7 @@ public class HierarchicalDeterministicKeyTest {
                 "6f1eef3d85f72c2500f3d42cad8632725e830d20ffa61d8dfda1c961c84302f0",
                 Hex.encode(HierarchicalDeterministicKey.getMasterKeyFromSeed(seed, init)));
         int[] path = {44, 397, 0};
-        assertEquals("88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498",
+        assertEquals("88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df8049838d300841c903867050c222b9f0b43893a5675f0a87756cfce4e3fd71c23334a",
                 Hex.encode(HierarchicalDeterministicKey.getFromSeed(seed, init, path)));
         assertTrue(true);
     }

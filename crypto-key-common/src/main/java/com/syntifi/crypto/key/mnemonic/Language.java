@@ -4,6 +4,14 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
+/**
+ * Enum with the languages, dictionaries and checkSum supported for Mnemonic generation
+ * Abstract class for needed shared functionalities
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.3.0
+ */
 public enum Language {
     EN("english.txt", "ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db", StandardCharsets.UTF_8, Locale.ENGLISH),
     PT("portuguese.txt", "eed387d44cf8f32f60754527e265230d8019e8a2277937c71ef812e7a46c93fd", StandardCharsets.UTF_8, Locale.forLanguageTag("PT")),

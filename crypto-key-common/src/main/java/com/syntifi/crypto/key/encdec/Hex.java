@@ -2,6 +2,10 @@ package com.syntifi.crypto.key.encdec;
 
 /**
  * Hex encoder/decoder
+ *
+ * @author Alexandre Carvalho
+ * @author Andre Bertolace
+ * @since 0.3.0
  */
 public class Hex {
 
