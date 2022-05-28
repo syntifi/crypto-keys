@@ -101,7 +101,7 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
         byte[] init = "ed25519 seed".getBytes(StandardCharsets.UTF_8);
         byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
         Ed25519PrivateKey pk2 = new Ed25519PrivateKey(key);
-        assertEquals("88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498",
+        assertEquals("88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df8049838d300841c903867050c222b9f0b43893a5675f0a87756cfce4e3fd71c23334",
                 Hex.encode(pk1.getKey()));
         assertEquals(Hex.encode(pk2.getKey()), Hex.encode(pk1.getKey()));
         assertEquals("0c91f6106ff835c0195d5388565a2d69e25038a7e23d26198f85caf6594117ec",
