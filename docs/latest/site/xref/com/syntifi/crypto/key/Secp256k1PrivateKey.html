@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  @NoArgsConstructor
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  @EqualsAndHashCode(callSuper = <strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Secp256k1PrivateKey" href="../../../../com/syntifi/crypto/key/Secp256k1PrivateKey.html#Secp256k1PrivateKey">Secp256k1PrivateKey</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractPrivateKey" href="../../../../com/syntifi/crypto/key/AbstractPrivateKey.html#AbstractPrivateKey">AbstractPrivateKey</a> {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Secp256k1PrivateKey" href="../../../../com/syntifi/crypto/key/Secp256k1PrivateKey.html#Secp256k1PrivateKey">Secp256k1PrivateKey</a> <strong class="jxr_keyword">extends</strong> AbstractPrivateKey {
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>      @Getter
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">private</strong> ECKeyPair keyPair;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  
@@ -118,7 +118,7 @@
 <a class="jxr_linenumber" name="L110" href="#L110">110</a> <em class="jxr_comment">     * by the X value in the elliptic curve</em>
 <a class="jxr_linenumber" name="L111" href="#L111">111</a> <em class="jxr_comment">     */</em>
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>     @Override
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">public</strong> <a name="AbstractPublicKey" href="../../../../com/syntifi/crypto/key/AbstractPublicKey.html#AbstractPublicKey">AbstractPublicKey</a> derivePublicKey() {
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <strong class="jxr_keyword">public</strong> AbstractPublicKey derivePublicKey() {
 <a class="jxr_linenumber" name="L114" href="#L114">114</a>         BigInteger pubKey = keyPair.getPublicKey();
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>         String pubKeyPrefix = pubKey.testBit(0) ? <span class="jxr_string">"03"</span> : <span class="jxr_string">"02"</span>;
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>         byte[] pubKeyBytes = Arrays.copyOf(pubKey.toByteArray(), 32);

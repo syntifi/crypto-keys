@@ -38,7 +38,7 @@
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  @NoArgsConstructor
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  @EqualsAndHashCode(callSuper = <strong class="jxr_keyword">true</strong>)
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Ed25519PrivateKey" href="../../../../com/syntifi/crypto/key/Ed25519PrivateKey.html#Ed25519PrivateKey">Ed25519PrivateKey</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractPrivateKey" href="../../../../com/syntifi/crypto/key/AbstractPrivateKey.html#AbstractPrivateKey">AbstractPrivateKey</a> {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Ed25519PrivateKey" href="../../../../com/syntifi/crypto/key/Ed25519PrivateKey.html#Ed25519PrivateKey">Ed25519PrivateKey</a> <strong class="jxr_keyword">extends</strong> AbstractPrivateKey {
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">private</strong> Ed25519PrivateKeyParameters privateKeyParameters;
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
@@ -97,7 +97,7 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>      }
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      @Override
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">public</strong> <a name="AbstractPublicKey" href="../../../../com/syntifi/crypto/key/AbstractPublicKey.html#AbstractPublicKey">AbstractPublicKey</a> derivePublicKey() {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      <strong class="jxr_keyword">public</strong> AbstractPublicKey derivePublicKey() {
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="Ed25519PublicKey" href="../../../../com/syntifi/crypto/key/Ed25519PublicKey.html#Ed25519PublicKey">Ed25519PublicKey</a>(privateKeyParameters.generatePublicKey().getEncoded());
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>      }
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  

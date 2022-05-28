@@ -39,7 +39,7 @@
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment"> * @author Andre Bertolace</em>
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment"> * @since 0.1.0</em>
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Ed25519PrivateKeyTests" href="../../../../com/syntifi/crypto/key/Ed25519PrivateKeyTests.html#Ed25519PrivateKeyTests">Ed25519PrivateKeyTests</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractCryptoTests" href="../../../../com/syntifi/crypto/key/AbstractCryptoTests.html#AbstractCryptoTests">AbstractCryptoTests</a> {
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="Ed25519PrivateKeyTests" href="../../../../com/syntifi/crypto/key/Ed25519PrivateKeyTests.html#Ed25519PrivateKeyTests">Ed25519PrivateKeyTests</a> <strong class="jxr_keyword">extends</strong> AbstractCryptoTests {
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger LOGGER = LoggerFactory.getLogger(Ed25519PrivateKeyTests.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>      @Test
@@ -109,7 +109,7 @@
 <a class="jxr_linenumber" name="L101" href="#L101">101</a>         byte[] init = <span class="jxr_string">"ed25519 seed"</span>.getBytes(StandardCharsets.UTF_8);
 <a class="jxr_linenumber" name="L102" href="#L102">102</a>         byte[] key = HierarchicalDeterministicKey.getFromSeed(seed, init, path);
 <a class="jxr_linenumber" name="L103" href="#L103">103</a>         Ed25519PrivateKey pk2 = <strong class="jxr_keyword">new</strong> Ed25519PrivateKey(key);
-<a class="jxr_linenumber" name="L104" href="#L104">104</a>         assertEquals(<span class="jxr_string">"88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df8049838d300841c903867050c222b9f0b43893a5675f0a87756cfce4e3fd71c23334a"</span>,
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>         assertEquals(<span class="jxr_string">"88793a8eeec537c67ee8d459f1899a47a2f1b752d06a4c793c66fd751df80498"</span>,
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>                 Hex.encode(pk1.getKey()));
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>         assertEquals(Hex.encode(pk2.getKey()), Hex.encode(pk1.getKey()));
 <a class="jxr_linenumber" name="L107" href="#L107">107</a>         assertEquals(<span class="jxr_string">"0c91f6106ff835c0195d5388565a2d69e25038a7e23d26198f85caf6594117ec"</span>,
