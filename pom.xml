@@ -7,7 +7,7 @@
     <groupId>com.syntifi.crypto</groupId>
     <artifactId>crypto-keys</artifactId>
     <packaging>pom</packaging>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
     <modules>
         <module>crypto-key-ed25519</module>
         <module>crypto-key-secp256k1</module>
@@ -51,7 +51,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
-        <lombok.version>1.18.22</lombok.version>
+        <lombok.version>1.18.24</lombok.version>
         <log4j.version>2.17.1</log4j.version>
         <slf4j.version>1.7.36</slf4j.version>
         <junit.version>5.8.2</junit.version>

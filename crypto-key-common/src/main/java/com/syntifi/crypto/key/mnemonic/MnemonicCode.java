@@ -97,7 +97,17 @@ public class MnemonicCode {
      * Convert mnemonic word list to seed.
      *
      * @param words list of words
-     * @param passphrase password, use "" if not required
+     * @return derived seed in byte array
+     */
+    public byte[] toSeed(List<String> words) {
+        return toSeed(words, "");
+    }
+
+    /**
+     * Convert mnemonic word list to seed.
+     *
+     * @param words list of words
+     * @param passphrase password, use {@link #toSeed(List)} if not required
      * @return derived seed in byte array
      */
     public byte[] toSeed(List<String> words, String passphrase) {
