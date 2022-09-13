@@ -4,17 +4,13 @@ import com.syntifi.crypto.key.encdec.Hex;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bouncycastle.asn1.*;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
-import org.bouncycastle.crypto.params.ECDomainParameters;
-import org.bouncycastle.crypto.params.ECKeyGenerationParameters;
 import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
-import org.bouncycastle.jce.ECNamedCurveTable;
-import org.bouncycastle.jce.spec.ECNamedCurveParameterSpec;
-import org.bouncycastle.pqc.crypto.gmss.GMSSKeyPairGenerator;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
@@ -24,7 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -39,6 +34,7 @@ import java.util.Arrays;
 @EqualsAndHashCode(callSuper = true)
 public class Secp256k1PrivateKey extends AbstractPrivateKey {
     @Getter
+    @Setter
     private ECKeyPair keyPair;
 
     public Secp256k1PrivateKey(byte[] privateKey) throws IOException {
@@ -112,9 +108,16 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     @Override
     public AbstractPublicKey derivePublicKey() {
         BigInteger pubKey = keyPair.getPublicKey();
-        String pubKeyPrefix = pubKey.testBit(0) ? "03" : "02";
-        byte[] pubKeyBytes = Arrays.copyOf(pubKey.toByteArray(), 32);
-        return new Secp256k1PublicKey(Hex.decode(pubKeyPrefix + Hex.encode(pubKeyBytes)));
+        byte[] pubKeyBytes = Secp256k1PublicKey.getShortKey(pubKey.toByteArray());
+        return new Secp256k1PublicKey(pubKeyBytes);
+    }
+
+    public static Secp256k1PrivateKey deriveRandomKey() throws IOException {
+        SecureRandom rnd = new SecureRandom();
+        ECKeyPair keyPair = ECKeyPair.create(rnd.generateSeed(32));
+        Secp256k1PrivateKey sk = new Secp256k1PrivateKey();
+        sk.setKeyPair(keyPair);
+        return sk;
     }
 
 }

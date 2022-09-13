@@ -1,7 +1,6 @@
 package com.syntifi.crypto.key;
 
 import com.syntifi.crypto.key.deterministic.HierarchicalDeterministicKey;
-import com.syntifi.crypto.key.encdec.Hex;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.bouncycastle.asn1.*;
@@ -13,13 +12,11 @@ import org.bouncycastle.crypto.Signer;
 import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
 import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
-import org.bouncycastle.crypto.params.Ed25519PublicKeyParameters;
 import org.bouncycastle.crypto.signers.Ed25519Signer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.List;
 
 /**
  * ed25519 implementation of {@link AbstractPrivateKey}

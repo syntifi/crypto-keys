@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,5 +79,18 @@ public class Secp256k1PrivateKeyTests extends AbstractCryptoTests {
         assertEquals(
             "ea5b38fd0db5fb3d871c47fde1fa4c4db75d1a9e1c0ac54d826e178ee0e63707176b4e63b4f838bd031f007fffd6a4f71d920a10c48ea53dd1573fa2b58a829e",
                 Hex.encode(signature));
+    }
+
+    @Test
+    void create_random_key() throws GeneralSecurityException, IOException {
+        Secp256k1PrivateKey sk = Secp256k1PrivateKey.deriveRandomKey();
+        Secp256k1PublicKey pk = (Secp256k1PublicKey) sk.derivePublicKey();
+        LOGGER.info(sk.getKeyPair().getPrivateKey().toString(16));
+        LOGGER.info(sk.getKeyPair().getPublicKey().toString(16));
+        LOGGER.info(Hex.encode(pk.getKey()));
+        byte[] msg = "this is a test".getBytes();
+        byte[] signature = sk.sign(msg);
+        LOGGER.info(Hex.encode(signature));
+        assertTrue(pk.verify(msg, signature));
     }
 }

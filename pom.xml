@@ -7,7 +7,7 @@
     <groupId>com.syntifi.crypto</groupId>
     <artifactId>crypto-keys</artifactId>
     <packaging>pom</packaging>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.4.0</version>
     <modules>
         <module>crypto-key-ed25519</module>
         <module>crypto-key-secp256k1</module>

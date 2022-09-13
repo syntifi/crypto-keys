@@ -109,6 +109,15 @@ public class Ed25519PrivateKeyTests extends AbstractCryptoTests {
         assertEquals(Hex.encode(pk2.derivePublicKey().getKey()), Hex.encode(pk1.derivePublicKey().getKey()));
     }
 
+    @Test
+    void create_random_key() {
+        Ed25519PrivateKey sk = Ed25519PrivateKey.deriveRandomKey();
+        Ed25519PublicKey pk = (Ed25519PublicKey) sk.derivePublicKey();
+        byte[] msg = "this is a test".getBytes();
+        byte[] signature = sk.sign(msg);
+        assertTrue(pk.verify(msg, signature));
+    }
+
     private Ed25519PrivateKey readPrivateKey(String privateKeyPath) throws URISyntaxException, IOException {
         Ed25519PrivateKey privateKey = new Ed25519PrivateKey();
         String keyFilePath = getResourcesKeyPath(privateKeyPath);

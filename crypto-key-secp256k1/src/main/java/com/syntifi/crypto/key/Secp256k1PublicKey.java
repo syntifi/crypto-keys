@@ -68,12 +68,19 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
 
     @Override
     public Boolean verify(byte[] message, byte[] signature) throws GeneralSecurityException {
-        SignatureData signatureData = new SignatureData(
+        //TODO: Double check the issue the getV(), for now we are trying with both (27 and 28)
+        SignatureData signatureData1 = new SignatureData(
                 (byte) 27,
                 Arrays.copyOfRange(signature, 0, 32),
                 Arrays.copyOfRange(signature, 32, 64));
-        BigInteger derivedKey = Sign.signedMessageHashToKey(Hash.sha256(message), signatureData);
-        return Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey.toByteArray()), getKey());
+        BigInteger derivedKey1 = Sign.signedMessageHashToKey(Hash.sha256(message), signatureData1);
+        SignatureData signatureData2 = new SignatureData(
+                (byte) 28,
+                Arrays.copyOfRange(signature, 0, 32),
+                Arrays.copyOfRange(signature, 32, 64));
+        BigInteger derivedKey2 = Sign.signedMessageHashToKey(Hash.sha256(message), signatureData2);
+        return Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey1.toByteArray()), getKey()) ||
+                Arrays.equals(Secp256k1PublicKey.getShortKey(derivedKey2.toByteArray()), getKey());
     }
 
     /**
@@ -85,7 +92,7 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
     public static byte[] getShortKey(byte[] key) {
         BigInteger pubKey = new BigInteger(key);
         String pubKeyPrefix = pubKey.testBit(0) ? "03" : "02";
-        byte[] pubKeyBytes = Arrays.copyOf(key, 32);
+        byte[] pubKeyBytes = Arrays.copyOfRange(key, 0, 32);
         return Hex.decode(pubKeyPrefix + Hex.encode(pubKeyBytes));
     }
 }
