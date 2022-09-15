@@ -1,4 +1,5 @@
 com.syntifi.crypto.key
+com.syntifi.crypto.key.checksum
 com.syntifi.crypto.key.deterministic
 com.syntifi.crypto.key.encdec
 com.syntifi.crypto.key.hash
