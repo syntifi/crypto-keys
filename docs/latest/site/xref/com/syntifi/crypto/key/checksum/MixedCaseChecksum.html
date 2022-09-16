@@ -8,12 +8,12 @@
 <div id="overview"><a href="../../../../../../apidocs/com/syntifi/crypto/key/checksum/MixedCaseChecksum.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.syntifi.crypto.key.checksum;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.jcajce.provider.digest.Keccak;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> org.bouncycastle.util.encoders.Hex;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> * Implementation of the EIP-55: Mixed-case checksum address encoding</em>
-<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> * Documentation available at: <a href="https://eips.ethereum.org/EIPS/eip-55" target="alexandria_uri">https://eips.ethereum.org/EIPS/eip-55</a></em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.encdec.Hex;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.hash.Blake2b;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> com.syntifi.crypto.key.hash.Keccak256;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> * Mixed checksumEncoding</em>
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> * @author Alexandre Carvalho</em>
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * @author Andre Bertolace</em>
@@ -21,29 +21,51 @@
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="MixedCaseChecksum" href="../../../../../com/syntifi/crypto/key/checksum/MixedCaseChecksum.html#MixedCaseChecksum">MixedCaseChecksum</a> {
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String kekkac256(String value) {
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>          Keccak.DigestKeccak kekkac256 = <strong class="jxr_keyword">new</strong> Keccak.Digest256();
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>          byte[] hash = kekkac256.digest(value.getBytes());
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>          <strong class="jxr_keyword">return</strong> Hex.toHexString(hash);
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>      }
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String checksumEncode(String address) {
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>          Boolean withPrefix = address.startsWith(<span class="jxr_string">"0x"</span>);
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>          String value = address.toLowerCase().replace(<span class="jxr_string">"0x"</span>, <span class="jxr_string">""</span>);
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>          <strong class="jxr_keyword">char</strong>[] hash = kekkac256(value).toCharArray();
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>          <strong class="jxr_keyword">char</strong>[] chars = value.toCharArray();
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>          <strong class="jxr_keyword">char</strong>[] encoded = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[chars.length];
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; chars.length; i++) {
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>              encoded[i] = Character.digit(hash[i], 16) &gt; 7
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>                      ? Character.toUpperCase(chars[i])
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>                      : chars[i];
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>          }
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>          <strong class="jxr_keyword">return</strong> withPrefix
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>                  ? <span class="jxr_string">"0x"</span> + String.valueOf(encoded)
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>                  : String.valueOf(encoded);
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      }
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  }
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">     * Implementation of the EIP-55: Mixed-case checksum address encoding</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">     * Documentation available at: <a href="https://eips.ethereum.org/EIPS/eip-55" target="alexandria_uri">https://eips.ethereum.org/EIPS/eip-55</a></em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">     * @param value Hex string</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">     * @return</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String checksumEncodeEIP55(String value) {
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>          <strong class="jxr_keyword">char</strong>[] hash = Hex.encode(Keccak256.digest(value.toLowerCase().getBytes())).toCharArray();
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>          <strong class="jxr_keyword">char</strong>[] chars = value.toCharArray();
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>          <strong class="jxr_keyword">char</strong>[] encoded = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[chars.length];
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; chars.length; i++) {
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>              encoded[i] = Character.digit(hash[i], 16) &gt; 7
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>                      ? Character.toUpperCase(chars[i])
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>                      : Character.toLowerCase(chars[i]);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>          }
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          <strong class="jxr_keyword">return</strong> String.valueOf(encoded);
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">     * Implementation of the CEP-57</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">     * Documentation available at: <a href="https://github.com/casper-network/ceps/blob/master/text/0057-checksummed-addresses.md" target="alexandria_uri">https://github.com/casper-network/ceps/blob/master/text/0057-checksummed-addresses.md</a></em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment">     * @param value Hex string</em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">     * @return</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String checksumEncodeCEP57(String value) {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          byte[] hash = Blake2b.digest(Hex.decode(value), 32);
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>          <strong class="jxr_keyword">char</strong>[] chars = value.toCharArray();
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>          <strong class="jxr_keyword">char</strong>[] encoded = <strong class="jxr_keyword">new</strong> <strong class="jxr_keyword">char</strong>[chars.length];
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>          <strong class="jxr_keyword">int</strong> whichByte = 0;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">int</strong> whichBit = 0;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; chars.length; i++) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>              <strong class="jxr_keyword">boolean</strong> bitSet = (Byte.toUnsignedInt(hash[whichByte]) &amp; (1&lt;&lt;whichBit)) != 0;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>              <strong class="jxr_keyword">if</strong> (Character.isAlphabetic(chars[i])) {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>                  encoded[i] = bitSet ? Character.toUpperCase(chars[i]) : Character.toLowerCase(chars[i]);
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>                  whichByte = (whichByte + whichBit/7) % hash.length;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>                  whichBit = (whichBit + 1) % 8;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>              } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>                  encoded[i] = chars[i];
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>              }
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          }
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">return</strong> String.valueOf(encoded);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      }
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>
