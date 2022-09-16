@@ -14,23 +14,35 @@
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="MixedCaseChecksumTest" href="../../../../../com/syntifi/crypto/key/checksum/MixedCaseChecksumTest.html#MixedCaseChecksumTest">MixedCaseChecksumTest</a> {
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>       @Test
-<a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">void</strong> shouldMatchLowerCaseAddress() {
-<a class="jxr_linenumber" name="L10" href="#L10">10</a>          assertEquals(<span class="jxr_string">"0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"</span>,
-<a class="jxr_linenumber" name="L11" href="#L11">11</a>                  MixedCaseChecksum.checksumEncode(<span class="jxr_string">"0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"</span>));
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>       <strong class="jxr_keyword">void</strong> eip55ShouldMatchLowerCaseAddress() {
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>          assertEquals(<span class="jxr_string">"fB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"</span>,
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>                  MixedCaseChecksum.checksumEncodeEIP55(<span class="jxr_string">"fb6916095ca1df60bb79ce92ce3ea74c37c5d359"</span>));
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>      }
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>      @Test
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">void</strong> shouldMatchUpperCaseAddress() {
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>          assertEquals(<span class="jxr_string">"0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"</span>,
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>                  MixedCaseChecksum.checksumEncode(<span class="jxr_string">"0xFB6916095CA1DF60BB79CE92CE3EA74C37C5D359"</span>));
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>      <strong class="jxr_keyword">void</strong> eip55ShouldMatchUpperCaseAddress() {
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>          assertEquals(<span class="jxr_string">"fB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"</span>,
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>                  MixedCaseChecksum.checksumEncodeEIP55(<span class="jxr_string">"FB6916095CA1DF60BB79CE92CE3EA74C37C5D359"</span>));
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>      }
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>      @Test
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>      <strong class="jxr_keyword">void</strong> kekkac256ShouldMatch() {
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>          assertEquals(<span class="jxr_string">"a9059cbb2ab09eb219583f4a59a5d0623ade346d962bcd4e46b11da047c9049b"</span>,
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>                  MixedCaseChecksum.kekkac256(<span class="jxr_string">"transfer(address,uint256)"</span>));
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>      <strong class="jxr_keyword">void</strong> cep57houldMatchEmptyAddress() {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>          assertEquals(<span class="jxr_string">""</span>,
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>                  MixedCaseChecksum.checksumEncodeEIP55(<span class="jxr_string">""</span>));
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>      }
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  }
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>      @Test
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>      <strong class="jxr_keyword">void</strong> cep57houldMatchLowerCaseAddress() {
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>          assertEquals(<span class="jxr_string">"010573D52dFA032716fDC2AE5396987f280304106fC11f6Ac6Ccf287B81dc09ED7"</span>,
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>                  MixedCaseChecksum.checksumEncodeCEP57(<span class="jxr_string">"010573d52dfa032716fdc2ae5396987f280304106fc11f6ac6ccf287b81dc09ed7"</span>));
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      }
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      @Test
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">void</strong> cep57houldMatchUpperCaseAddress() {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>          assertEquals(<span class="jxr_string">"51DA5aE5C39880Bfe4f94B0898332d1BD37e647F72f79Cf23475df1Bb1f85bEA"</span>,
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>                  MixedCaseChecksum.checksumEncodeCEP57(<span class="jxr_string">"51da5ae5c39880bfe4f94b0898332d1bd37e647f72f79cf23475df1bb1f85bea"</span>));
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      }
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2022. All rights reserved.</div>
