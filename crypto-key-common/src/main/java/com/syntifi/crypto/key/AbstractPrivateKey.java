@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.PrivateKey;
 
 /**
  * Abstract class for needed shared functionalities
@@ -17,8 +19,13 @@ import java.security.GeneralSecurityException;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class AbstractPrivateKey {
+public abstract class AbstractPrivateKey implements PrivateKey {
     private byte[] key;
+
+    @Override
+    public byte[] getEncoded() {
+        return key;
+    }
 
     /**
      * Loads a private key from a byte array

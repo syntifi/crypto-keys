@@ -1,16 +1,10 @@
 package com.syntifi.crypto.key;
 
-import com.syntifi.crypto.key.encdec.Hex;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bouncycastle.asn1.*;
-import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
-import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
-import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
-import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
@@ -21,7 +15,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 /**
  * secp256k1 implementation of {@link AbstractPrivateKey}
@@ -46,7 +39,7 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     public void loadPrivateKey(byte[] privateKey) throws IOException {
         ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(privateKey);
         String algoId = key.getObjectAt(2).toString();
-        if (algoId.equals("[0]" + ASN1Identifiers.Secp256k1OIDCurve) && key.getObjectAt(0).toString().equals("1")) {
+        if (algoId.equals("[0]" + Secp256k1KeySpec.SECP_256_K_1_OID_CURVE) && key.getObjectAt(0).toString().equals("1")) {
             DEROctetString pk = (DEROctetString) key.getObjectAt(1);
             keyPair = ECKeyPair.create(pk.getOctets());
             this.setKey(keyPair.getPrivateKey().toByteArray());
@@ -61,14 +54,14 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     @Override
     public void writePrivateKey(String filename) throws IOException {
         try (FileWriter fileWriter = new FileWriter(filename)) {
-            DERTaggedObject derPrefix = new DERTaggedObject(0, ASN1Identifiers.Secp256k1OIDCurve);
+            DERTaggedObject derPrefix = new DERTaggedObject(0, Secp256k1KeySpec.SECP_256_K_1_OID_CURVE);
             DEROctetString key = new DEROctetString(getKey());
             ASN1EncodableVector vector = new ASN1EncodableVector();
             vector.add(new ASN1Integer(1));
             vector.add(key);
             vector.add(derPrefix);
             DERSequence derKey = new DERSequence(vector);
-            PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.EC_PRIVATE_KEY_DER_HEADER);
+            PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), Secp256k1KeySpec.PRIVATE_KEY_DER_HEADER);
         }
     }
 
@@ -120,4 +113,13 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
         return sk;
     }
 
+    @Override
+    public String getAlgorithm() {
+        return null;
+    }
+
+    @Override
+    public String getFormat() {
+        return null;
+    }
 }

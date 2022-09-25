@@ -52,7 +52,7 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
         ASN1Primitive key = ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(filename));
         PrivateKeyInfo keyInfo = PrivateKeyInfo.getInstance(key);
         String algoId = keyInfo.getPrivateKeyAlgorithm().getAlgorithm().toString();
-        if (algoId.equals(ASN1Identifiers.Ed25519OID.getId())) {
+        if (algoId.equals(Ed25519KeySpec.ED_25519_OID.getId())) {
             privateKeyParameters = new Ed25519PrivateKeyParameters(keyInfo.getPrivateKey().getEncoded(), 4);
             setKey(privateKeyParameters.getEncoded());
         }
@@ -60,14 +60,14 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
 
     @Override
     public void writePrivateKey(String filename) throws IOException {
-        DERSequence derPrefix = new DERSequence(ASN1Identifiers.Ed25519OID);
+        DERSequence derPrefix = new DERSequence(Ed25519KeySpec.ED_25519_OID);
         DEROctetString key = new DEROctetString(new DEROctetString(getKey()));
         ASN1EncodableVector vector = new ASN1EncodableVector();
         vector.add(new ASN1Integer(0));
         vector.add(derPrefix);
         vector.add(key);
         DERSequence derKey = new DERSequence(vector);
-        PemFileHelper.writePemFile(filename, derKey.getEncoded(), ASN1Identifiers.PRIVATE_KEY_DER_HEADER);
+        PemFileHelper.writePemFile(filename, derKey.getEncoded(), Ed25519KeySpec.PRIVATE_KEY_DER_HEADER);
     }
 
     @Override
@@ -106,4 +106,13 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
     }
 
 
+    @Override
+    public String getAlgorithm() {
+        return null;
+    }
+
+    @Override
+    public String getFormat() {
+        return null;
+    }
 }

@@ -35,8 +35,8 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         ASN1Sequence objBaseSeq = ASN1Sequence.getInstance(derKey);
         String keyId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(0)).getId();
         String curveId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(1)).getId();
-        if (curveId.equals(ASN1Identifiers.Secp256k1OIDCurve.getId())
-                && keyId.equals(ASN1Identifiers.Secp256k1OIDkey.getId())) {
+        if (curveId.equals(Secp256k1KeySpec.SECP_256_K_1_OID_CURVE.getId())
+                && keyId.equals(Secp256k1KeySpec.SECP_256_K_1_OI_DKEY.getId())) {
             DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
             setKey(key.getBytes());
         } else {
@@ -55,14 +55,14 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         try (FileWriter fileWriter = new FileWriter(filename)) {
             DERBitString key = new DERBitString(getKey());
             ASN1EncodableVector v1 = new ASN1EncodableVector();
-            v1.add(ASN1Identifiers.Secp256k1OIDkey);
-            v1.add(ASN1Identifiers.Secp256k1OIDCurve);
+            v1.add(Secp256k1KeySpec.SECP_256_K_1_OI_DKEY);
+            v1.add(Secp256k1KeySpec.SECP_256_K_1_OID_CURVE);
             DERSequence derPrefix = new DERSequence(v1);
             ASN1EncodableVector v2 = new ASN1EncodableVector();
             v2.add(derPrefix);
             v2.add(key);
             DERSequence derKey = new DERSequence(v2);
-            PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.PUBLIC_KEY_DER_HEADER);
+            PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), Secp256k1KeySpec.PUBLIC_KEY_DER_HEADER);
         }
     }
 
@@ -94,5 +94,15 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         String pubKeyPrefix = pubKey.testBit(0) ? "03" : "02";
         byte[] pubKeyBytes = Arrays.copyOfRange(key, 0, 32);
         return Hex.decode(pubKeyPrefix + Hex.encode(pubKeyBytes));
+    }
+
+    @Override
+    public String getAlgorithm() {
+        return null;
+    }
+
+    @Override
+    public String getFormat() {
+        return null;
     }
 }
