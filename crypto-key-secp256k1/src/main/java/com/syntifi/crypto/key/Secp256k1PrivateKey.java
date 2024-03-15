@@ -37,7 +37,7 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     @Setter
     private ECKeyPair keyPair;
 
-    public Secp256k1PrivateKey(byte[] privateKey) throws IOException {
+    public Secp256k1PrivateKey(final byte[] privateKey) throws IOException {
         super(privateKey);
         loadPrivateKey(privateKey);
     }

@@ -37,7 +37,7 @@ public class Secp256k1PublicKey extends AbstractPublicKey {
         String curveId = ASN1ObjectIdentifier.getInstance(ASN1Sequence.getInstance(objBaseSeq.getObjectAt(0)).getObjectAt(1)).getId();
         if (curveId.equals(ASN1Identifiers.Secp256k1OIDCurve.getId())
                 && keyId.equals(ASN1Identifiers.Secp256k1OIDkey.getId())) {
-            DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
+            final DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
             setKey(key.getBytes());
         } else {
             throw new IOException();

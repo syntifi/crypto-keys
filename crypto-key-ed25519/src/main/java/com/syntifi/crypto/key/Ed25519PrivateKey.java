@@ -31,7 +31,7 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
 
     private Ed25519PrivateKeyParameters privateKeyParameters;
 
-    public Ed25519PrivateKey(byte[] privateKey) {
+    public Ed25519PrivateKey(final byte[] privateKey) {
         super(privateKey);
         loadPrivateKey(privateKey);
     }
