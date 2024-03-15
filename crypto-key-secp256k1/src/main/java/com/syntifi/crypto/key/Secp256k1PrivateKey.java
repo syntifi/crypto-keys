@@ -46,13 +46,6 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     }
 
     @Override
-    public void readPrivateKey(final String filename) throws IOException {
-        try (final Reader fileReader = new FileReader(filename)) {
-            readPrivateKey(fileReader);
-        }
-    }
-
-    @Override
     public void readPrivateKey(final Reader reader) throws IOException {
         loadPrivateKey(PemFileHelper.readPemFile(reader));
     }

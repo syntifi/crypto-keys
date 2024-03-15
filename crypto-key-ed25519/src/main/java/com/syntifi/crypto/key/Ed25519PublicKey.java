@@ -38,13 +38,6 @@ public class Ed25519PublicKey extends AbstractPublicKey {
      * HERE>
      */
     @Override
-    public void readPublicKey(final String filename) throws IOException {
-        try (final Reader fileReader = new FileReader(filename)) {
-            readPublicKey(fileReader);
-        }
-    }
-
-    @Override
     public void readPublicKey(final Reader reader) throws IOException {
         final ASN1Primitive derKey = ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(reader));
         final ASN1Sequence objBaseSeq = ASN1Sequence.getInstance(derKey);
@@ -54,13 +47,6 @@ public class Ed25519PublicKey extends AbstractPublicKey {
             final DERBitString key = DERBitString.getInstance(objBaseSeq.getObjectAt(1));
             publicKeyParameters = new Ed25519PublicKeyParameters(key.getBytes(), 0);
             setKey(publicKeyParameters.getEncoded());
-        }
-    }
-
-    @Override
-    public void writePublicKey(final String filename) throws IOException {
-        try (final Writer fileWriter = new FileWriter(filename)) {
-            writePublicKey(fileWriter);
         }
     }
 

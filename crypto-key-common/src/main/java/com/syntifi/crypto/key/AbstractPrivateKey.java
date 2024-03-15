@@ -34,7 +34,11 @@ public abstract class AbstractPrivateKey {
      * @param filename the source filename
      * @throws IOException thrown if an error occurs reading the file
      */
-    public abstract void readPrivateKey(final String filename) throws IOException;
+    public void readPrivateKey(final String filename) throws IOException {
+        try (final Reader fileReader = new FileReader(filename)) {
+            readPrivateKey(fileReader);
+        }
+    }
 
     /**
      * Reads the private key from a stream
@@ -44,14 +48,17 @@ public abstract class AbstractPrivateKey {
      */
     public abstract void readPrivateKey(final Reader reader) throws IOException;
 
-
     /**
      * Writes the private key to a file
      *
      * @param filename the target filename
      * @throws IOException thrown if an error occurs writing the file
      */
-    public abstract void writePrivateKey(final String filename) throws IOException;
+    public void writePrivateKey(final String filename) throws IOException {
+        try (final Writer fileWriter = new FileWriter(filename)) {
+            writePrivateKey(fileWriter);
+        }
+    }
 
     /**
      * Writes the private key to a file
@@ -59,9 +66,7 @@ public abstract class AbstractPrivateKey {
      * @param writer the target writer
      * @throws IOException thrown if an error occurs writing the file
      */
-
     public abstract void writePrivateKey(final Writer writer) throws IOException;
-
 
     /**
      * Signs a message with the loaded key

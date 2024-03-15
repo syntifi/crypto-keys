@@ -66,13 +66,6 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
     }
 
     @Override
-    public void writePrivateKey(final String filename) throws IOException {
-        try (final Writer fileWriter = new FileWriter(filename)) {
-            writePrivateKey(fileWriter);
-        }
-    }
-
-    @Override
     public void writePrivateKey(final Writer writer) throws IOException {
         final DERSequence derPrefix = new DERSequence(ASN1Identifiers.Ed25519OID);
         final DEROctetString key = new DEROctetString(new DEROctetString(getKey()));
