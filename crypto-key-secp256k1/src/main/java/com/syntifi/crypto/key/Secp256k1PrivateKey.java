@@ -1,27 +1,19 @@
 package com.syntifi.crypto.key;
 
-import com.syntifi.crypto.key.encdec.Hex;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bouncycastle.asn1.*;
-import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
-import org.bouncycastle.crypto.generators.ECKeyPairGenerator;
-import org.bouncycastle.crypto.generators.Ed25519KeyPairGenerator;
-import org.bouncycastle.crypto.params.Ed25519KeyGenerationParameters;
-import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
 import org.web3j.crypto.Sign.SignatureData;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 /**
  * secp256k1 implementation of {@link AbstractPrivateKey}
@@ -37,39 +29,37 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     @Setter
     private ECKeyPair keyPair;
 
-    public Secp256k1PrivateKey(byte[] privateKey) throws IOException {
+    public Secp256k1PrivateKey(final byte[] privateKey) throws IOException {
         super(privateKey);
         loadPrivateKey(privateKey);
     }
 
     @Override
-    public void loadPrivateKey(byte[] privateKey) throws IOException {
-        ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(privateKey);
-        String algoId = key.getObjectAt(2).toString();
+    public void loadPrivateKey(final byte[] privateKey) throws IOException {
+        final ASN1Sequence key = (ASN1Sequence) ASN1Primitive.fromByteArray(privateKey);
+        final String algoId = key.getObjectAt(2).toString();
         if (algoId.equals("[0]" + ASN1Identifiers.Secp256k1OIDCurve) && key.getObjectAt(0).toString().equals("1")) {
-            DEROctetString pk = (DEROctetString) key.getObjectAt(1);
+            final DEROctetString pk = (DEROctetString) key.getObjectAt(1);
             keyPair = ECKeyPair.create(pk.getOctets());
             this.setKey(keyPair.getPrivateKey().toByteArray());
         }
     }
 
     @Override
-    public void readPrivateKey(String filename) throws IOException {
-        loadPrivateKey(PemFileHelper.readPemFile(filename));
+    public void readPrivateKey(final Reader reader) throws IOException {
+        loadPrivateKey(PemFileHelper.readPemFile(reader));
     }
 
     @Override
-    public void writePrivateKey(String filename) throws IOException {
-        try (FileWriter fileWriter = new FileWriter(filename)) {
-            DERTaggedObject derPrefix = new DERTaggedObject(0, ASN1Identifiers.Secp256k1OIDCurve);
-            DEROctetString key = new DEROctetString(getKey());
-            ASN1EncodableVector vector = new ASN1EncodableVector();
-            vector.add(new ASN1Integer(1));
-            vector.add(key);
-            vector.add(derPrefix);
-            DERSequence derKey = new DERSequence(vector);
-            PemFileHelper.writePemFile(fileWriter, derKey.getEncoded(), ASN1Identifiers.EC_PRIVATE_KEY_DER_HEADER);
-        }
+    public void writePrivateKey(final Writer writer) throws IOException {
+        final DERTaggedObject derPrefix = new DERTaggedObject(0, ASN1Identifiers.Secp256k1OIDCurve);
+        final DEROctetString key = new DEROctetString(getKey());
+        final ASN1EncodableVector vector = new ASN1EncodableVector();
+        vector.add(new ASN1Integer(1));
+        vector.add(key);
+        vector.add(derPrefix);
+        final DERSequence derKey = new DERSequence(vector);
+        PemFileHelper.writePemFile(writer, derKey.getEncoded(), ASN1Identifiers.EC_PRIVATE_KEY_DER_HEADER);
     }
 
     /*
@@ -90,34 +80,33 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
      * ", of minimal length.
      */
     @Override
-    public byte[] sign(byte[] message) {
-        SignatureData signature = Sign.signMessage(Hash.sha256(message), keyPair, false);
+    public byte[] sign(final byte[] message) {
+        final SignatureData signature = Sign.signMessage(Hash.sha256(message), keyPair, false);
         // TODO: Check this conversion
         //return Hex.toHexString(signature.getR()) + Hex.toHexString(signature.getS());
-        ByteBuffer bb = ByteBuffer.allocate(signature.getR().length + signature.getS().length);
+        final ByteBuffer bb = ByteBuffer.allocate(signature.getR().length + signature.getS().length);
         bb.put(signature.getR());
         bb.put(signature.getS());
         return bb.array();
     }
 
-    /*
+    /**
      * Returns a Secp256k1PublicKey object in a compressed format
      * adding the prefix 02/03 to identify the positive or negative Y followed
      * by the X value in the elliptic curve
      */
     @Override
     public AbstractPublicKey derivePublicKey() {
-        BigInteger pubKey = keyPair.getPublicKey();
-        byte[] pubKeyBytes = Secp256k1PublicKey.getShortKey(pubKey.toByteArray());
+        final BigInteger pubKey = keyPair.getPublicKey();
+        final byte[] pubKeyBytes = Secp256k1PublicKey.getShortKey(pubKey.toByteArray());
         return new Secp256k1PublicKey(pubKeyBytes);
     }
 
-    public static Secp256k1PrivateKey deriveRandomKey() throws IOException {
-        SecureRandom rnd = new SecureRandom();
-        ECKeyPair keyPair = ECKeyPair.create(rnd.generateSeed(32));
-        Secp256k1PrivateKey sk = new Secp256k1PrivateKey();
+    public static Secp256k1PrivateKey deriveRandomKey() {
+        final SecureRandom rnd = new SecureRandom();
+        final ECKeyPair keyPair = ECKeyPair.create(rnd.generateSeed(32));
+        final Secp256k1PrivateKey sk = new Secp256k1PrivateKey();
         sk.setKeyPair(keyPair);
         return sk;
     }
-
 }
