@@ -116,7 +116,7 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
         return new Secp256k1PublicKey(pubKeyBytes);
     }
 
-    public static Secp256k1PrivateKey deriveRandomKey() throws IOException {
+    public static Secp256k1PrivateKey deriveRandomKey() {
         final SecureRandom rnd = new SecureRandom();
         final ECKeyPair keyPair = ECKeyPair.create(rnd.generateSeed(32));
         final Secp256k1PrivateKey sk = new Secp256k1PrivateKey();
