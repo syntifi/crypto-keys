@@ -77,12 +77,12 @@ public class Secp256k1PrivateKeyTests extends AbstractCryptoTests {
 
         LOGGER.info(Hex.encode(signature));
         assertEquals(
-            "ea5b38fd0db5fb3d871c47fde1fa4c4db75d1a9e1c0ac54d826e178ee0e63707176b4e63b4f838bd031f007fffd6a4f71d920a10c48ea53dd1573fa2b58a829e",
+                "ea5b38fd0db5fb3d871c47fde1fa4c4db75d1a9e1c0ac54d826e178ee0e63707176b4e63b4f838bd031f007fffd6a4f71d920a10c48ea53dd1573fa2b58a829e",
                 Hex.encode(signature));
     }
 
     @Test
-    void create_random_key() throws GeneralSecurityException, IOException {
+    void create_random_key() throws GeneralSecurityException {
         Secp256k1PrivateKey sk = Secp256k1PrivateKey.deriveRandomKey();
         Secp256k1PublicKey pk = (Secp256k1PublicKey) sk.derivePublicKey();
         LOGGER.info(sk.getKeyPair().getPrivateKey().toString(16));
@@ -92,5 +92,18 @@ public class Secp256k1PrivateKeyTests extends AbstractCryptoTests {
         byte[] signature = sk.sign(msg);
         LOGGER.info(Hex.encode(signature));
         assertTrue(pk.verify(msg, signature));
+    }
+
+    @Test
+    void randomKeyCanBeWrittenToAndReadFromPemFile() throws IOException {
+
+        final Secp256k1PrivateKey secp256k1PrivateKey = Secp256k1PrivateKey.deriveRandomKey();
+        final File pemFile = File.createTempFile("secp256k1", ".pem");
+        pemFile.deleteOnExit();
+        secp256k1PrivateKey.writePrivateKey(pemFile.getPath());
+
+        final Secp256k1PrivateKey readKey = new Secp256k1PrivateKey();
+        readKey.readPrivateKey(pemFile.getPath());
+        assertEquals(Hex.encode(secp256k1PrivateKey.getKey()), Hex.encode(readKey.getKey()));
     }
 }
