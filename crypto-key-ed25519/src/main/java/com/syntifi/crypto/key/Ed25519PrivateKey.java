@@ -48,13 +48,6 @@ public class Ed25519PrivateKey extends AbstractPrivateKey {
      * (32 byte) 38AECE974291F14B5FEF97E1B21F684394120B6E7A8AFB04398BBE787E8BC559
      */
     @Override
-    public void readPrivateKey(final String filename) throws IOException {
-        try (final Reader fileReader = new FileReader(filename)) {
-            readPrivateKey(fileReader);
-        }
-    }
-
-    @Override
     public void readPrivateKey(final Reader reader) throws IOException {
         final ASN1Primitive key = ASN1Primitive.fromByteArray(PemFileHelper.readPemFile(reader));
         final PrivateKeyInfo keyInfo = PrivateKeyInfo.getInstance(key);

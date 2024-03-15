@@ -34,7 +34,7 @@ public abstract class AbstractPrivateKey {
      * @param filename the source filename
      * @throws IOException thrown if an error occurs reading the file
      */
-    public void readPrivateKey(final String filename) throws IOException {
+    public final void readPrivateKey(final String filename) throws IOException {
         try (final Reader fileReader = new FileReader(filename)) {
             readPrivateKey(fileReader);
         }
@@ -54,7 +54,7 @@ public abstract class AbstractPrivateKey {
      * @param filename the target filename
      * @throws IOException thrown if an error occurs writing the file
      */
-    public void writePrivateKey(final String filename) throws IOException {
+    public final void writePrivateKey(final String filename) throws IOException {
         try (final Writer fileWriter = new FileWriter(filename)) {
             writePrivateKey(fileWriter);
         }

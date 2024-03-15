@@ -51,13 +51,6 @@ public class Secp256k1PrivateKey extends AbstractPrivateKey {
     }
 
     @Override
-    public void writePrivateKey(final String filename) throws IOException {
-        try (final FileWriter fileWriter = new FileWriter(filename)) {
-            writePrivateKey(fileWriter);
-        }
-    }
-
-    @Override
     public void writePrivateKey(final Writer writer) throws IOException {
         final DERTaggedObject derPrefix = new DERTaggedObject(0, ASN1Identifiers.Secp256k1OIDCurve);
         final DEROctetString key = new DEROctetString(getKey());
