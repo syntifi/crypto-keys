@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.IOException;
+import java.io.*;
 import java.security.GeneralSecurityException;
 
 /**
@@ -18,6 +18,7 @@ import java.security.GeneralSecurityException;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class AbstractPrivateKey {
+
     private byte[] key;
 
     /**
@@ -25,7 +26,7 @@ public abstract class AbstractPrivateKey {
      *
      * @param privateKey the private key bytes
      */
-    public abstract void loadPrivateKey(byte[] privateKey) throws IOException;
+    public abstract void loadPrivateKey(final byte[] privateKey) throws IOException;
 
     /**
      * Reads the private key from a file
@@ -33,7 +34,15 @@ public abstract class AbstractPrivateKey {
      * @param filename the source filename
      * @throws IOException thrown if an error occurs reading the file
      */
-    public abstract void readPrivateKey(String filename) throws IOException;
+    public abstract void readPrivateKey(final String filename) throws IOException;
+
+    /**
+     * Reads the private key from a stream
+     *
+     * @param reader the source of the private key
+     * @throws IOException thrown if an error occurs reading the file
+     */
+    public abstract void readPrivateKey(final Reader reader) throws IOException;
 
 
     /**
@@ -42,7 +51,17 @@ public abstract class AbstractPrivateKey {
      * @param filename the target filename
      * @throws IOException thrown if an error occurs writing the file
      */
-    public abstract void writePrivateKey(String filename) throws IOException;
+    public abstract void writePrivateKey(final String filename) throws IOException;
+
+    /**
+     * Writes the private key to a file
+     *
+     * @param writer the target writer
+     * @throws IOException thrown if an error occurs writing the file
+     */
+
+    public abstract void writePrivateKey(final Writer writer) throws IOException;
+
 
     /**
      * Signs a message with the loaded key
@@ -51,7 +70,7 @@ public abstract class AbstractPrivateKey {
      * @return signed message
      * @throws GeneralSecurityException thrown if an error occurs processing message or signature
      */
-    public abstract byte[] sign(byte[] message) throws GeneralSecurityException;
+    public abstract byte[] sign(final byte[] message) throws GeneralSecurityException;
 
     /**
      * Derives the public key from the loaded private key
@@ -59,6 +78,4 @@ public abstract class AbstractPrivateKey {
      * @return the derived {@link AbstractPublicKey}
      */
     public abstract AbstractPublicKey derivePublicKey();
-
-
 }

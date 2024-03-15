@@ -6,9 +6,8 @@ import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
 
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -23,13 +22,13 @@ public class PemFileHelper {
     /**
      * Reads a PEM file
      *
-     * @param filename the filename to read
+     * @param keyReader the reader to load the key from
      * @return a byte array with file content
      * @throws IOException thrown if error reading file
      */
-    public static byte[] readPemFile(String filename) throws IOException {
-        try (FileReader keyReader = new FileReader(filename); PemReader pemReader = new PemReader(keyReader)) {
-            PemObject pemObject = pemReader.readPemObject();
+    public static byte[] readPemFile(final Reader keyReader) throws IOException {
+        try (final PemReader pemReader = new PemReader(keyReader)) {
+            final PemObject pemObject = pemReader.readPemObject();
             return pemObject.getContent();
         }
     }
@@ -37,28 +36,14 @@ public class PemFileHelper {
     /**
      * Writes a PEM file
      *
-     * @param fileWriter a filewriter
+     * @param fileWriter the writer of the key
      * @param encodedKey the encoded key
      * @param keyType    the key type
      * @throws IOException thrown if error writing file
      */
-    public static void writePemFile(Writer fileWriter, byte[] encodedKey, String keyType) throws IOException {
-        try (PemWriter pemWriter = new PemWriter(fileWriter)) {
+    public static void writePemFile(final Writer fileWriter, final byte[] encodedKey, final String keyType) throws IOException {
+        try (final PemWriter pemWriter = new PemWriter(fileWriter)) {
             pemWriter.writeObject(new PemObject(keyType, encodedKey));
-        }
-    }
-
-    /**
-     * Writes a PEM file
-     *
-     * @param filename   the filename to read
-     * @param encodedKey the encoded key
-     * @param keyType    the key type
-     * @throws IOException thrown if error writing file
-     */
-    public static void writePemFile(String filename, byte[] encodedKey, String keyType) throws IOException {
-        try (FileWriter fileWriter = new FileWriter(filename)) {
-            writePemFile(fileWriter, encodedKey, keyType);
         }
     }
 }

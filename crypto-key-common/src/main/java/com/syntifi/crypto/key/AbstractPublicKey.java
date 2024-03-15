@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.security.GeneralSecurityException;
 
 /**
@@ -18,6 +20,7 @@ import java.security.GeneralSecurityException;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class AbstractPublicKey {
+
     private byte[] key;
 
     /**
@@ -25,7 +28,7 @@ public abstract class AbstractPublicKey {
      *
      * @param publicKey the public key bytes
      */
-    public abstract void loadPublicKey(byte[] publicKey) throws IOException;
+    public abstract void loadPublicKey(final byte[] publicKey) throws IOException;
 
     /**
      * Reads the public key from a file
@@ -33,7 +36,16 @@ public abstract class AbstractPublicKey {
      * @param filename the source filename
      * @throws IOException thrown if an error occurs reading the file
      */
-    public abstract void readPublicKey(String filename) throws IOException;
+    public abstract void readPublicKey(final String filename) throws IOException;
+
+    /**
+     * Reads the public key from a file
+     *
+     * @param reader the source filename
+     * @throws IOException thrown if an error occurs reading the file
+     */
+    public abstract void readPublicKey(final Reader reader) throws IOException;
+
 
     /**
      * Writes the public key to a file
@@ -41,7 +53,15 @@ public abstract class AbstractPublicKey {
      * @param filename the target filename
      * @throws IOException thrown if an error occurs writing the file
      */
-    public abstract void writePublicKey(String filename) throws IOException;
+    public abstract void writePublicKey(final String filename) throws IOException;
+
+    /**
+     * Writes the public key to a file
+     *
+     * @param writer the target to write the public key
+     * @throws IOException thrown if an error occurs writing the file
+     */
+    public abstract void writePublicKey(final Writer writer) throws IOException;
 
     /**
      * Verifies message with given signature
@@ -51,5 +71,5 @@ public abstract class AbstractPublicKey {
      * @return true if matches, false otherwise
      * @throws GeneralSecurityException thrown if an error occurs processing message and signature
      */
-    public abstract Boolean verify(byte[] message, byte[] signature) throws GeneralSecurityException;
+    public abstract Boolean verify(final byte[] message, final byte[] signature) throws GeneralSecurityException;
 }
